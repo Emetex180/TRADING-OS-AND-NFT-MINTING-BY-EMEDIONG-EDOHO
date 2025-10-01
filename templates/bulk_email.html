@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Send Bulk Email</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f7fa;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+
+    header {
+      background-color: #1e293b; /* dark navy */
+      color: #fff;
+      padding: 1rem 2rem;
+      text-align: center;
+    }
+
+    h2 {
+      color: #1e293b;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 30px auto;
+      background: #fff;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0px 4px 12px rgba(0,0,0,0.08);
+    }
+
+    form input[type="text"],
+    form textarea {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      transition: border 0.2s;
+    }
+
+    form input[type="text"]:focus,
+    form textarea:focus {
+      border: 1px solid #2563eb; /* blue focus */
+    }
+
+    button {
+      background-color: #2563eb;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 15px;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background-color: #1d4ed8;
+    }
+
+    .logout {
+      display: inline-block;
+      margin-top: 20px;
+      color: #2563eb;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .logout:hover {
+      text-decoration: underline;
+    }
+
+    .messages {
+      margin-top: 20px;
+      padding: 10px;
+      border-radius: 6px;
+    }
+
+    .messages li {
+      list-style: none;
+      padding: 8px;
+      margin-bottom: 5px;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .messages li.error {
+      background-color: #fee2e2;
+      color: #b91c1c;
+    }
+
+    .messages li.success {
+      background-color: #dcfce7;
+      color: #166534;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>📩 Bulk Email Dashboard</h1>
+  </header>
+
+  <div class="container">
+    <h2>Send Bulk Email to All Registered Users</h2>
+
+    <form method="POST">
+      <input type="text" name="subject" placeholder="Email Subject" required>
+      <textarea name="body" rows="8" placeholder="Write your message here..." required></textarea>
+      <button type="submit">Send Emails</button>
+    </form>
+
+    <a href="{{ url_for('admin_logout') }}" class="logout">Logout</a>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul class="messages">
+          {% for category, message in messages %}
+            <li class="{{ category }}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+  </div>
+</body>
+</html>

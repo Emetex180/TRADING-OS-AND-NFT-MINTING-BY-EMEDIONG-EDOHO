@@ -1,0 +1,12 @@
+{
+  "name": "Test Trade",
+  "description": "This is a test metadata upload.",
+  "image": "https://via.placeholder.com/150",
+  "attributes": [
+    { "trait_type": "Pair", "value": "EURUSD" },
+    { "trait_type": "Result", "value": "win" },
+    { "trait_type": "Entry", "value": "1.1050" },
+    { "trait_type": "Exit", "value": "1.1100" },
+    { "trait_type": "Date", "value": "2025-09-28" }
+  ]
+}

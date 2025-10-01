@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Provide Feedback - EliteTrader</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.1rem;
+        }
+
+        .content-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #0ea5e9;
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 150px;
+            line-height: 1.5;
+        }
+
+        .form-input::placeholder {
+            color: #9ca3af;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #0ea5e9, #3b82f6);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(14, 165, 233, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #374151;
+            border: 1px solid #e5e7eb;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+            transform: translateY(-2px);
+        }
+
+        .feedback-tips {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .feedback-tips h3 {
+            color: #0ea5e9;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .feedback-tips ul {
+            color: #374151;
+            margin-left: 20px;
+        }
+
+        .feedback-tips li {
+            margin-bottom: 5px;
+            line-height: 1.4;
+        }
+
+        .navigation {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: white;
+            color: #0ea5e9;
+            padding: 12px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: #0ea5e9;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .content-card {
+                padding: 25px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 15px;
+            }
+            
+            .content-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💬 Provide Feedback</h1>
+            <p>Share your insights and help fellow traders improve</p>
+        </div>
+
+        <div class="content-card">
+            <div class="feedback-tips">
+                <h3>💡 Feedback Tips</h3>
+                <ul>
+                    <li>Be constructive and specific in your feedback</li>
+                    <li>Focus on trading strategy and risk management</li>
+                    <li>Highlight both strengths and areas for improvement</li>
+                    <li>Share your own experiences when relevant</li>
+                </ul>
+            </div>
+
+            <form method="POST">
+                <div class="form-group">
+                    <label for="mentor_name" class="form-label">Your Name</label>
+                    <input type="text" 
+                           id="mentor_name" 
+                           name="mentor_name" 
+                           class="form-input" 
+                           placeholder="Enter your name or remain anonymous"
+                           value="Anonymous Mentor">
+                </div>
+
+                <div class="form-group">
+                    <label for="feedback_text" class="form-label">Your Feedback</label>
+                    <textarea name="feedback_text" 
+                              id="feedback_text" 
+                              class="form-input form-textarea" 
+                              placeholder="Provide constructive feedback on the trading journal. Consider aspects like strategy, risk management, emotional control, and potential improvements..."></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    📤 Submit Feedback
+                </button>
+            </form>
+        </div>
+
+        <div class="navigation">
+            <a href="javascript:history.back()" class="nav-btn">
+                ← Go Back
+            </a>
+            <a href="{{ url_for('shared_journals') }}" class="nav-btn">
+                👥 Browse More Journals
+            </a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('form');
+            const textarea = document.getElementById('feedback_text');
+            
+            // Add character counter
+            const charCounter = document.createElement('div');
+            charCounter.style.textAlign = 'right';
+            charCounter.style.color = '#6b7280';
+            charCounter.style.fontSize = '0.9rem';
+            charCounter.style.marginTop = '5px';
+            textarea.parentNode.appendChild(charCounter);
+            
+            function updateCharCounter() {
+                const length = textarea.value.length;
+                charCounter.textContent = `${length} characters`;
+                
+                if (length < 10) {
+                    charCounter.style.color = '#ef4444';
+                } else if (length < 50) {
+                    charCounter.style.color = '#f59e0b';
+                } else {
+                    charCounter.style.color = '#10b981';
+                }
+            }
+            
+            textarea.addEventListener('input', updateCharCounter);
+            updateCharCounter();
+            
+            // Form validation
+            form.addEventListener('submit', function(e) {
+                const feedbackText = textarea.value.trim();
+                
+                if (feedbackText.length < 10) {
+                    e.preventDefault();
+                    alert('Please provide more detailed feedback (at least 10 characters).');
+                    textarea.focus();
+                    return;
+                }
+                
+                if (feedbackText.length > 2000) {
+                    e.preventDefault();
+                    alert('Feedback is too long. Please keep it under 2000 characters.');
+                    textarea.focus();
+                    return;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

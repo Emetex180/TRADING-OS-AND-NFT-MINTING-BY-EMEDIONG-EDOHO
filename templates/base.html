@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>EliteTrader Journal</title>
+    <!-- Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Font Awesome Kit -->
+    <script src="https://kit.fontawesome.com/4c455a2408.js" crossorigin="anonymous"></script>
+    {% block style %}{% endblock %}
+
+    <style>
+        :root {
+            --primary-dark: #093366;     /* Your Dark Blue */
+            --primary-accent: #e3b031;   /* Your Gold/Orange */
+            --secondary-accent: #0e81f2; /* Your Azure Blue */
+            --text-dark: #000000;        /* Your Black */
+            --text-light: #ffffff;       /* White for contrast */
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8fafc;
+            color: var(--text-dark);
+        }
+
+        /* NAV BAR WITH YOUR COLOR SCHEME */
+        nav {
+            background: linear-gradient(to right, var(--primary-dark), var(--secondary-accent));
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 100;
+        }
+
+        .nav-brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-brand i {
+            margin-right: 8px;
+            color: var(--primary-accent);
+        }
+
+        nav a, nav form button {
+            color: white;
+            text-decoration: none;
+            margin: 0 0.75rem;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 0.5rem 1.25rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        nav a i, nav form button i {
+            margin-right: 6px;
+        }
+
+        nav a:hover, nav form button:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        nav form { 
+            margin: 0; 
+            display: inline;
+        }
+
+        /* Hamburger icon */
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 30px;
+            height: 20px;
+        }
+
+        .hamburger div {
+            width: 100%;
+            height: 3px;
+            background: white;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .hamburger.active div:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+        }
+
+        .hamburger.active div:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active div:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
+        }
+
+        /* Mobile menu */
+        .nav-links {
+            display: flex;
+            align-items: center;
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem;
+                flex-wrap: wrap;
+            }
+            
+            .nav-links {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                align-items: flex-start;
+                background: linear-gradient(to bottom, var(--primary-dark), var(--secondary-accent));
+                position: absolute;
+                top: 100%;
+                left: 0;
+                padding: 1rem;
+                box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+            }
+
+            nav a, nav form button {
+                width: 100%;
+                text-align: left;
+                padding: 0.75rem 1rem;
+                margin: 0.25rem 0;
+                justify-content: flex-start;
+            }
+
+            .hamburger { 
+                display: flex; 
+            }
+
+            .nav-links.active { 
+                display: flex; 
+            }
+        }
+
+        /* FLASH MESSAGES STYLES */
+        .flash-message {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 1000;
+            opacity: 1;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            display: flex;
+            align-items: center;
+            max-width: 400px;
+        }
+
+        .flash-message i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        .flash-success { 
+            background-color: #16a34a; 
+            border-left: 4px solid #0d8b3a;
+        }
+        .flash-info    { 
+            background-color: var(--secondary-accent); 
+            border-left: 4px solid #0b6bcb;
+        }
+        .flash-warning { 
+            background-color: var(--primary-accent); 
+            color: var(--text-dark);
+            border-left: 4px solid #c9971a;
+        }
+        .flash-danger  { 
+            background-color: #dc2626; 
+            border-left: 4px solid #b91c1c;
+        }
+
+        .flash-hide {
+            opacity: 0;
+            transform: translateX(100%);
+        }
+
+        /* Main content area */
+        .main-content {
+            min-height: calc(100vh - 80px);
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVIGATION -->
+    <nav>
+        <a href="/" class="nav-brand">
+            <i class="fas fa-chart-line"></i>
+            EliteTrader Journal
+        </a>
+        
+        <div class="hamburger" onclick="toggleMenu()">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+
+        <div class="nav-links">
+            {% if session.get('user_id') %}
+                <a href="/dashboard">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Dashboard
+                </a>
+                <a href="/log_trade">
+                    <i class="fas fa-plus-circle"></i>
+                    Log Trade
+                </a>
+                <a href="/analytics">
+                    <i class="fas fa-chart-bar"></i>
+                    Analytics
+                </a>
+                <form action="/logout" method="post">
+                    <button type="submit">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </button>
+                </form>
+            {% else %}
+                <a href="/login">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Login
+                </a>
+                <a href="/register">
+                    <i class="fas fa-user-plus"></i>
+                    Register
+                </a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- FLASH MESSAGES -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div id="flash-container">
+                {% for category, message in messages %}
+                    <div class="flash-message flash-{{ category }}">
+                        {% if category == 'success' %}
+                            <i class="fas fa-check-circle"></i>
+                        {% elif category == 'info' %}
+                            <i class="fas fa-info-circle"></i>
+                        {% elif category == 'warning' %}
+                            <i class="fas fa-exclamation-triangle"></i>
+                        {% elif category == 'danger' %}
+                            <i class="fas fa-exclamation-circle"></i>
+                        {% else %}
+                            <i class="fas fa-bell"></i>
+                        {% endif %}
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <div class="main-content">
+        {% block content %}{% endblock %}
+    </div>
+
+    <script>
+        function toggleMenu() {
+            const menu = document.querySelector('.nav-links');
+            const hamburger = document.querySelector('.hamburger');
+            menu.classList.toggle('active');
+            hamburger.classList.toggle('active');
+        }
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const nav = document.querySelector('nav');
+            const hamburger = document.querySelector('.hamburger');
+            const navLinks = document.querySelector('.nav-links');
+            
+            if (!nav.contains(event.target) && navLinks.classList.contains('active')) {
+                navLinks.classList.remove('active');
+                hamburger.classList.remove('active');
+            }
+        });
+
+        // AUTO-HIDE FLASH MESSAGES AFTER 5 SECONDS
+        window.addEventListener('DOMContentLoaded', () => {
+            const flashes = document.querySelectorAll('.flash-message');
+            flashes.forEach((flash, index) => {
+                // Stagger the appearance of multiple messages
+                setTimeout(() => {
+                    flash.style.opacity = '1';
+                    flash.style.transform = 'translateX(0)';
+                }, 100 * index);
+                
+                // Auto-hide after 5 seconds
+                setTimeout(() => {
+                    flash.classList.add('flash-hide');
+                    setTimeout(() => flash.remove(), 500); // remove from DOM after fade
+                }, 5000 + (100 * index));
+            });
+        });
+    </script>
+</body>
+</html>

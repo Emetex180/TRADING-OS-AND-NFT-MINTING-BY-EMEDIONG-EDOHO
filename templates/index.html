@@ -1,0 +1,533 @@
+{% extends "base.html" %}
+{% block title %}EliteTrader Journal{% endblock %}
+{% block content %}
+
+<style>
+:root {
+  --primary-dark: #093366;     /* Your Dark Blue */
+  --primary-accent: #e3b031;   /* Your Gold/Orange */
+  --secondary-accent: #0e81f2; /* Your Azure Blue */
+  --text-dark: #000000;        /* Your Black */
+  --text-light: #ffffff;       /* White for contrast */
+}
+
+/* Hero Section Enhancements */
+.hero-section {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, #000000 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%230e81f2" fill-opacity="0.1" d="M0,160L48,170.7C96,181,192,203,288,197.3C384,192,480,160,576,165.3C672,171,768,213,864,213.3C960,213,1056,171,1152,149.3C1248,128,1344,128,1392,128L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+  background-size: cover;
+  background-position: bottom;
+}
+
+.rocket-icon i {
+    color: var(--primary-accent);
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.rocket-icon:hover i {
+    color: var(--secondary-accent);
+    transform: translateY(-5px) rotate(20deg) scale(1.2);
+}
+
+/* Feature Cards */
+.feature-card {
+  transition: all 0.3s ease;
+  border-bottom: 3px solid transparent;
+}
+
+.feature-card:hover {
+  transform: translateY(-10px);
+  border-bottom: 3px solid var(--primary-accent);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+}
+
+.feature-icon {
+  background: linear-gradient(135deg, var(--primary-dark), var(--secondary-accent));
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+}
+
+/* Roadmap Enhancements */
+.roadmap-phase {
+  position: relative;
+  overflow: hidden;
+}
+
+.roadmap-phase::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 5px;
+  height: 100%;
+  background: linear-gradient(to bottom, var(--primary-accent), var(--secondary-accent));
+}
+
+.phase-completed {
+  border-left: 5px solid var(--primary-accent);
+}
+
+.phase-inprogress {
+  border-left: 5px solid var(--secondary-accent);
+}
+
+.phase-upcoming {
+  border-left: 5px solid #ccc;
+}
+
+/* Stats Section */
+.stats-section {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, #000000 100%);
+}
+
+.stat-card {
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  background: rgba(255,255,255,0.15);
+}
+
+/* Testimonials */
+.testimonial-card {
+  background: white;
+  border-radius: 10px;
+  position: relative;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.testimonial-card::before {
+  content: """;
+  position: absolute;
+  top: -20px;
+  left: 20px;
+  font-size: 80px;
+  color: var(--primary-accent);
+  font-family: Georgia, serif;
+  line-height: 1;
+}
+
+/* CTA Section */
+.cta-section {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-accent) 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23e3b031" fill-opacity="0.1" d="M0,160L48,170.7C96,181,192,203,288,197.3C384,192,480,160,576,165.3C672,171,768,213,864,213.3C960,213,1056,171,1152,149.3C1248,128,1344,128,1392,128L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+  background-size: cover;
+  background-position: bottom;
+}
+
+/* Footer */
+.site-footer {
+  background: #000000;
+}
+
+/* Animation for stats */
+@keyframes countUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.count-animation {
+  animation: countUp 1s ease-out;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .hero-section h2 {
+    font-size: 2.5rem;
+  }
+  
+  .feature-card {
+    margin-bottom: 20px;
+  }
+}
+</style>
+
+<!-- Hero Section -->
+<section class="hero-section text-center py-20 text-white relative">
+  <div class="max-w-4xl mx-auto px-6 relative z-10">
+    <h2 class="text-5xl md:text-6xl font-extrabold mb-6 tracking-tight">EliteTrader Journal</h2>
+    <p class="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
+      Track. Analyze. Grow. Become an Elite Trader 
+      <a href="#" class="rocket-icon inline-block ml-2">
+        <i class="fas fa-rocket fa-2x"></i>
+      </a>
+    </p>
+    <p class="text-lg mb-10 opacity-80 max-w-3xl mx-auto">
+      The ultimate trading journal for serious traders who want to optimize performance, minimize risk, and achieve consistent profitability.
+    </p>
+    <div class="flex flex-col sm:flex-row justify-center gap-4">
+      <a href="/register" class="bg-white text-indigo-600 px-8 py-3 rounded-full font-semibold shadow hover:bg-gray-100 transition transform hover:-translate-y-1">
+        Start Free Trial
+      </a>
+      <a href="#features" class="border-2 border-white text-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-indigo-600 transition">
+        Explore Features
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats-section py-16 text-white">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+      <div class="stat-card p-6 text-center">
+        <div class="text-3xl font-bold mb-2 count-animation">5,000+</div>
+        <div class="text-sm opacity-80">Active Traders</div>
+      </div>
+      <div class="stat-card p-6 text-center">
+        <div class="text-3xl font-bold mb-2 count-animation">2.1M+</div>
+        <div class="text-sm opacity-80">Trades Logged</div>
+      </div>
+      <div class="stat-card p-6 text-center">
+        <div class="text-3xl font-bold mb-2 count-animation">37%</div>
+        <div class="text-sm opacity-80">Avg. Performance Gain</div>
+      </div>
+      <div class="stat-card p-6 text-center">
+        <div class="text-3xl font-bold mb-2 count-animation">94%</div>
+        <div class="text-sm opacity-80">User Satisfaction</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section id="features" class="py-20 bg-gray-50">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="text-center mb-16">
+      <h3 class="text-3xl font-bold text-gray-800">Powerful Features for Elite Traders</h3>
+      <div class="w-20 h-1 bg-indigo-500 mx-auto mt-2 rounded"></div>
+      <p class="text-lg text-gray-600 max-w-2xl mx-auto mt-4">
+        Everything you need to track, analyze, and improve your trading performance in one platform.
+      </p>
+    </div>
+    
+    <div class="grid md:grid-cols-3 gap-8">
+      <div class="feature-card bg-white p-8 rounded-xl shadow-md">
+        <div class="feature-icon">
+          <i class="fas fa-chart-line text-white text-2xl"></i>
+        </div>
+        <h4 class="font-bold text-xl mb-4 text-center">Advanced Analytics</h4>
+        <p class="text-gray-600 text-center">
+          Deep insights into your trading patterns, win rates, risk metrics, and performance benchmarks.
+        </p>
+      </div>
+      
+      <div class="feature-card bg-white p-8 rounded-xl shadow-md">
+        <div class="feature-icon">
+          <i class="fas fa-shield-alt text-white text-2xl"></i>
+        </div>
+        <h4 class="font-bold text-xl mb-4 text-center">Risk Management</h4>
+        <p class="text-gray-600 text-center">
+          Monitor your risk exposure, set alerts, and ensure you're always trading within your limits.
+        </p>
+      </div>
+      
+      <div class="feature-card bg-white p-8 rounded-xl shadow-md">
+        <div class="feature-icon">
+          <i class="fas fa-brain text-white text-2xl"></i>
+        </div>
+        <h4 class="font-bold text-xl mb-4 text-center">Psychology Tracking</h4>
+        <p class="text-gray-600 text-center">
+          Log your emotional state, identify psychological patterns, and improve your trading mindset.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- About Section -->
+<section id="about" class="py-20 bg-white">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="flex flex-col md:flex-row items-center gap-12">
+      <div class="md:w-1/2">
+        <h3 class="text-3xl font-bold text-gray-800 mb-6">About EliteTrader Journal</h3>
+        <div class="w-20 h-1 bg-indigo-500 mb-6 rounded"></div>
+        <p class="text-lg text-gray-700 mb-6 leading-relaxed">
+          EliteTrader Journal is a professional trading log that helps traders track performance, analyze strategies, and make informed, data-driven decisions.
+        </p>
+        <p class="text-lg text-gray-700 mb-6 leading-relaxed">
+          Record every trade, monitor risk, and gain insights into your strategy and trading psychology all in one place. Ideal for traders and investors looking to optimize performance and showcase accountability.
+        </p>
+        <div class="flex gap-4">
+          <a href="/register" class="bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold shadow hover:bg-indigo-700 transition">
+            Get Started
+          </a>
+          <a href="#" class="border border-indigo-600 text-indigo-600 px-6 py-3 rounded-lg font-semibold hover:bg-indigo-50 transition">
+            Learn More
+          </a>
+        </div>
+      </div>
+      <div class="md:w-1/2">
+        <div class="bg-gradient-to-br from-indigo-500 to-cyan-400 rounded-2xl p-1 shadow-xl">
+          <div class="bg-white rounded-xl p-6 h-full">
+            <div class="flex items-center mb-6">
+              <div class="w-3 h-3 rounded-full bg-red-500 mr-2"></div>
+              <div class="w-3 h-3 rounded-full bg-yellow-500 mr-2"></div>
+              <div class="w-3 h-3 rounded-full bg-green-500"></div>
+            </div>
+            <div class="bg-gray-100 rounded-lg p-4 mb-4">
+              <div class="flex justify-between mb-2">
+                <span class="font-semibold">Trade Performance</span>
+                <span class="text-green-500 font-bold">+12.4%</span>
+              </div>
+              <div class="h-2 bg-gray-300 rounded-full">
+                <div class="h-2 bg-green-500 rounded-full w-3/4"></div>
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4 mb-4">
+              <div class="bg-gray-100 rounded-lg p-4 text-center">
+                <div class="text-2xl font-bold text-indigo-600">78%</div>
+                <div class="text-sm text-gray-600">Win Rate</div>
+              </div>
+              <div class="bg-gray-100 rounded-lg p-4 text-center">
+                <div class="text-2xl font-bold text-indigo-600">1.8</div>
+                <div class="text-sm text-gray-600">Risk/Reward</div>
+              </div>
+            </div>
+            <div class="text-center text-gray-500 text-sm">
+              Sample dashboard - Your actual data will appear here
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="py-20 bg-gray-50">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="text-center mb-16">
+      <h3 class="text-3xl font-bold text-gray-800">What Our Traders Say</h3>
+      <div class="w-20 h-1 bg-indigo-500 mx-auto mt-2 rounded"></div>
+    </div>
+    
+    <div class="grid md:grid-cols-2 gap-8">
+      <div class="testimonial-card p-8">
+        <div class="flex items-center mb-4">
+          <div class="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center mr-4">
+            <i class="fas fa-user text-indigo-600"></i>
+          </div>
+          <div>
+            <h4 class="font-bold">Sarah Johnson</h4>
+            <p class="text-gray-500 text-sm">Forex Trader</p>
+          </div>
+        </div>
+        <p class="text-gray-700">
+          "EliteTrader Journal transformed my trading. The analytics helped me identify patterns I was missing, and my profitability increased by 40% in just three months."
+        </p>
+      </div>
+      
+      <div class="testimonial-card p-8">
+        <div class="flex items-center mb-4">
+          <div class="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center mr-4">
+            <i class="fas fa-user text-indigo-600"></i>
+          </div>
+          <div>
+            <h4 class="font-bold">Michael Chen</h4>
+            <p class="text-gray-500 text-sm">Stock Trader</p>
+          </div>
+        </div>
+        <p class="text-gray-700">
+          "The psychology tracking feature was a game-changer for me. Understanding my emotional triggers helped me avoid costly impulsive trades."
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Roadmap Section -->
+<section id="roadmap" class="py-20 bg-white">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="text-center mb-16">
+      <h3 class="text-3xl font-bold text-gray-800">Development Roadmap</h3>
+      <div class="w-20 h-1 bg-indigo-500 mx-auto mt-2 rounded"></div>
+      <p class="text-lg text-gray-600 max-w-2xl mx-auto mt-4">
+        Our journey to build the ultimate trading journal platform
+      </p>
+    </div>
+    
+    <div class="max-w-3xl mx-auto">
+      <div class="roadmap-phase phase-completed bg-white p-6 rounded-lg shadow-md mb-8">
+        <div class="flex items-start">
+          <div class="bg-green-500 text-white rounded-full p-2 mr-4 mt-1">
+            <i class="fas fa-check"></i>
+          </div>
+          <div>
+            <h4 class="font-bold text-xl mb-2">Phase 1: Core Journal Features</h4>
+            <p class="text-gray-600">Basic trade logging, user authentication, and performance analytics.</p>
+            <div class="mt-4 flex flex-wrap gap-2">
+              <span class="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full">Completed</span>
+              <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full">Trade Logging</span>
+              <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full">User Accounts</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="roadmap-phase phase-inprogress bg-white p-6 rounded-lg shadow-md mb-8">
+        <div class="flex items-start">
+          <div class="bg-blue-500 text-white rounded-full p-2 mr-4 mt-1">
+            <i class="fas fa-cog fa-spin"></i>
+          </div>
+          <div>
+            <h4 class="font-bold text-xl mb-2">Phase 2: Advanced Analytics</h4>
+            <p class="text-gray-600">Charts, risk management tools, and AI-powered trade insights.</p>
+            <div class="mt-4 flex flex-wrap gap-2">
+              <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full">In Progress</span>
+              <span class="bg-gray-100 text-gray-800 text-xs px-3 py-1 rounded-full">Advanced Charts</span>
+              <span class="bg-gray-100 text-gray-800 text-xs px-3 py-1 rounded-full">AI Insights</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="roadmap-phase phase-upcoming bg-white p-6 rounded-lg shadow-md">
+        <div class="flex items-start">
+          <div class="bg-gray-400 text-white rounded-full p-2 mr-4 mt-1">
+            <i class="fas fa-clock"></i>
+          </div>
+          <div>
+            <h4 class="font-bold text-xl mb-2">Phase 3: NFT Integration</h4>
+            <p class="text-gray-600">Mint trading journals as NFTs and explore blockchain integration.</p>
+            <div class="mt-4 flex flex-wrap gap-2">
+              <span class="bg-gray-100 text-gray-800 text-xs px-3 py-1 rounded-full">Upcoming</span>
+              <span class="bg-gray-100 text-gray-800 text-xs px-3 py-1 rounded-full">NFT Journals</span>
+              <span class="bg-gray-100 text-gray-800 text-xs px-3 py-1 rounded-full">Blockchain</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section py-16 text-center text-white relative">
+  <div class="max-w-4xl mx-auto px-6 relative z-10">
+    <h3 class="text-3xl font-bold mb-4">Ready to Elevate Your Trading?</h3>
+    <p class="text-lg mb-8 max-w-2xl mx-auto">Join thousands of successful traders who use EliteTrader Journal to optimize their performance and achieve consistent results.</p>
+    <div class="flex flex-col sm:flex-row justify-center gap-4">
+      <a href="/register" class="bg-white text-indigo-600 px-8 py-3 rounded-full font-semibold shadow hover:bg-gray-100 transition transform hover:-translate-y-1">
+        Start Free Trial
+      </a>
+      <a href="#features" class="border-2 border-white text-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-indigo-600 transition">
+        Explore Features
+      </a>
+    </div>
+    <p class="mt-6 text-sm opacity-80">No credit card required. 14-day free trial.</p>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="site-footer py-12">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="grid md:grid-cols-4 gap-8 mb-8">
+      <div>
+        <h2 class="text-2xl font-bold text-white mb-4">EliteTrader Journal</h2>
+        <p class="text-gray-400 mb-4">Track, analyze, and grow your trading journey with precision and insight.</p>
+        <div class="flex space-x-4">
+          <a href="https://www.facebook.com/share/19zFWZ526F/" target="_blank" class="text-gray-400 hover:text-blue-600 transition">
+            <i class="fab fa-facebook-f fa-lg"></i>
+          </a>
+          <a href="https://x.com/EdohoEmediong" target="_blank" class="text-gray-400 hover:text-sky-400 transition">
+            <i class="fab fa-x fa-lg"></i>
+          </a>
+          <a href="https://www.linkedin.com/in/emediong-edoho-4a4381307" target="_blank" class="text-gray-400 hover:text-blue-700 transition">
+            <i class="fab fa-linkedin-in fa-lg"></i>
+          </a>
+          <a href="https://emediongedoho.netlify.app/" target="_blank" class="text-gray-400 hover:text-cyan-400 transition">
+            <i class="fa-solid fa-globe fa-lg"></i>
+          </a>
+        </div>
+      </div>
+      
+      <div>
+        <h3 class="text-white font-semibold mb-4">Product</h3>
+        <ul class="space-y-2">
+          <li><a href="#features" class="text-gray-400 hover:text-white transition">Features</a></li>
+          <li><a href="#roadmap" class="text-gray-400 hover:text-white transition">Roadmap</a></li>
+          <li><a href="/pricing" class="text-gray-400 hover:text-white transition">Pricing</a></li>
+          <li><a href="#" class="text-gray-400 hover:text-white transition">API</a></li>
+        </ul>
+      </div>
+      
+      <div>
+        <h3 class="text-white font-semibold mb-4">Resources</h3>
+        <ul class="space-y-2">
+          <li><a href="#" class="text-gray-400 hover:text-white transition">Documentation</a></li>
+          <li><a href="#" class="text-gray-400 hover:text-white transition">Blog</a></li>
+          <li><a href="#" class="text-gray-400 hover:text-white transition">Support</a></li>
+          <li><a href="#" class="text-gray-400 hover:text-white transition">Community</a></li>
+        </ul>
+      </div>
+      
+      <div>
+        <h3 class="text-white font-semibold mb-4">Company</h3>
+        <ul class="space-y-2">
+          <li><a href="#about" class="text-gray-400 hover:text-white transition">About</a></li>
+          <li><a href="#" class="text-gray-400 hover:text-white transition">Careers</a></li>
+          <li><a href="#" class="text-gray-400 hover:text-white transition">Contact</a></li>
+          <li><a href="#" class="text-gray-400 hover:text-white transition">Privacy Policy</a></li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="pt-8 border-t border-gray-800 text-center text-gray-400 text-sm">
+      &copy; 2025 EliteTrader Journal. All rights reserved.
+    </div>
+  </div>
+</footer>
+
+<script>
+// Simple animation for stats counter
+document.addEventListener('DOMContentLoaded', function() {
+  const statsSection = document.querySelector('.stats-section');
+  const statNumbers = document.querySelectorAll('.count-animation');
+  
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        statNumbers.forEach(stat => {
+          stat.classList.add('count-animation');
+        });
+      }
+    });
+  });
+  
+  observer.observe(statsSection);
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard - EliteTrader</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.1rem;
+        }
+
+        .leaderboard-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .leaderboard-header {
+            background: linear-gradient(135deg, #0ea5e9, #3b82f6);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .leaderboard-header h2 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .leaderboard-header p {
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        .leaderboard-table thead {
+            background: #f8fafc;
+        }
+
+        .leaderboard-table th {
+            padding: 18px 15px;
+            text-align: center;
+            font-weight: 600;
+            color: #374151;
+            border-bottom: 2px solid #e5e7eb;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .leaderboard-table td {
+            padding: 16px 15px;
+            text-align: center;
+            border-bottom: 1px solid #f1f5f9;
+            color: #4b5563;
+            transition: all 0.3s ease;
+        }
+
+        .leaderboard-table tbody tr:hover {
+            background: #f8fafc;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .rank-cell {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .rank-1 { color: #f59e0b; }
+        .rank-2 { color: #6b7280; }
+        .rank-3 { color: #92400e; }
+
+        .user-cell {
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .win-rate-cell {
+            font-weight: 600;
+        }
+
+        .profit-cell {
+            font-weight: 600;
+        }
+
+        .profit-positive {
+            color: #10b981;
+        }
+
+        .profit-negative {
+            color: #ef4444;
+        }
+
+        .trades-cell {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        .medal {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .gold { background: linear-gradient(135deg, #fcd34d, #f59e0b); color: white; }
+        .silver { background: linear-gradient(135deg, #e5e7eb, #9ca3af); color: white; }
+        .bronze { background: linear-gradient(135deg, #f97316, #92400e); color: white; }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: white;
+            color: #0ea5e9;
+            padding: 12px 24px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .back-button:hover {
+            background: #0ea5e9;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(14, 165, 233, 0.3);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .leaderboard-table th,
+            .leaderboard-table td {
+                padding: 12px 8px;
+                font-size: 0.9rem;
+            }
+            
+            .medal {
+                width: 25px;
+                height: 25px;
+                line-height: 25px;
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .leaderboard-header {
+                padding: 20px 15px;
+            }
+            
+            .leaderboard-header h2 {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Animation for top ranks */
+        @keyframes glow {
+            0% { box-shadow: 0 0 5px rgba(245, 158, 11, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(245, 158, 11, 0.8); }
+            100% { box-shadow: 0 0 5px rgba(245, 158, 11, 0.5); }
+        }
+
+        .top-3-row {
+            animation: glow 2s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏆 EliteTrader Leaderboard</h1>
+            <p>Compete with the best traders in our community</p>
+        </div>
+
+        <div class="leaderboard-card">
+            <div class="leaderboard-header">
+                <h2>Top Performers</h2>
+                <p>Real-time ranking based on win rate and profitability</p>
+            </div>
+
+            <div class="table-container">
+                <table class="leaderboard-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Trader</th>
+                            <th>Win Rate</th>
+                            <th>Avg Profit</th>
+                            <th>Total Trades</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in data %}
+                        <tr class="{% if row.rank <= 3 %}top-3-row{% endif %}">
+                            <td class="rank-cell rank-{{ row.rank }}">
+                                {% if row.rank == 1 %}
+                                    <span class="medal gold">🥇</span>
+                                {% elif row.rank == 2 %}
+                                    <span class="medal silver">🥈</span>
+                                {% elif row.rank == 3 %}
+                                    <span class="medal bronze">🥉</span>
+                                {% else %}
+                                    {{ row.rank }}
+                                {% endif %}
+                            </td>
+                            <td class="user-cell">
+                                👤 {{ row.user }}
+                            </td>
+                            <td class="win-rate-cell" style="color: {% if row.win_rate >= '70%' %}#10b981{% elif row.win_rate >= '50%' %}#f59e0b{% else %}#ef4444{% endif %};">
+                                {{ row.win_rate }}
+                            </td>
+                            <td class="profit-cell {% if row.profit.startswith('+') %}profit-positive{% else %}profit-negative{% endif %}">
+                                {{ row.profit }}
+                            </td>
+                            <td class="trades-cell">
+                                📊 {{ row.trades }} trades
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="footer">
+            <a href="/dashboard" class="back-button">
+                ← Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Add some interactive effects
+        document.addEventListener('DOMContentLoaded', function() {
+            const rows = document.querySelectorAll('.leaderboard-table tbody tr');
+            
+            rows.forEach((row, index) => {
+                // Add staggered animation
+                row.style.animationDelay = `${index * 0.1}s`;
+                
+                // Add click effect
+                row.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.98)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

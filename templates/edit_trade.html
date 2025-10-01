@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+<section style="max-width: 600px; margin: 2rem auto; padding: 1rem;">
+    <h2 style="text-align: center; font-size: 2rem; margin-bottom: 1rem; color: #1f2937;">Edit Trade</h2>
+    <form method="POST" enctype="multipart/form-data" style="background: white; padding: 1rem; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+        <div style="margin-bottom: 1rem;">
+            <label>Pair:</label>
+            <input type="text" name="pair" value="{{ trade[0] }}" required style="width: 100%; padding: 0.5rem;">
+        </div>
+        <div style="margin-bottom: 1rem;">
+            <label>Result:</label>
+            <select name="result" required style="width: 100%; padding: 0.5rem;">
+                <option value="Win" {% if trade[1].lower() == 'win' %}selected{% endif %}>Win</option>
+                <option value="Loss" {% if trade[1].lower() == 'loss' %}selected{% endif %}>Loss</option>
+            </select>
+        </div>
+        <div style="margin-bottom: 1rem;">
+            <label>Entry:</label>
+            <input type="number" step="any" name="entry" value="{{ trade[2] }}" required style="width: 100%; padding: 0.5rem;">
+        </div>
+        <div style="margin-bottom: 1rem;">
+            <label>Exit:</label>
+            <input type="number" step="any" name="exit" value="{{ trade[3] }}" required style="width: 100%; padding: 0.5rem;">
+        </div>
+        <div style="margin-bottom: 1rem;">
+            <label>Notes:</label>
+            <textarea name="notes" style="width: 100%; padding: 0.5rem;">{{ trade[4] }}</textarea>
+        </div>
+        <div style="margin-bottom: 1rem;">
+            <label>Emotions:</label>
+            <input type="text" name="emotions" value="{{ trade[7] if trade|length > 7 else '' }}" style="width: 100%; padding: 0.5rem;">
+        </div>
+        <div style="margin-bottom: 1rem;">
+            <label>Rule Violations:</label>
+            <input type="text" name="rule_violations" value="{{ trade[8] if trade|length > 8 else '' }}" style="width: 100%; padding: 0.5rem;">
+        </div>
+        <div style="margin-bottom: 1rem;">
+            <label>Date:</label>
+            <input type="date" name="date" value="{{ trade[6] }}" required style="width: 100%; padding: 0.5rem;">
+        </div>
+        <div style="margin-bottom: 1rem;">
+            <label>Screenshot (optional):</label>
+            <input type="file" name="screenshot" accept="image/*">
+            {% if trade[5] %}
+                <div style="margin-top: 0.5rem;"><img src="{{ url_for('uploaded_file', filename=trade[5]) }}" width="120" style="border-radius: 8px;"></div>
+            {% endif %}
+        </div>
+        <button type="submit" style="background-color: #10b981; color: white; padding: 0.5rem 1rem; border: none; border-radius: 8px; cursor: pointer;">Update Trade</button>
+        <a href="{{ url_for('dashboard') }}" style="margin-left: 1rem; color: #374151;">Cancel</a>
+    </form>
+</section>
+{% endblock %}

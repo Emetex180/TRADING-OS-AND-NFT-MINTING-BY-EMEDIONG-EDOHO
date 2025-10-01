@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Journal - EliteTrader</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .content-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+            margin-bottom: 30px;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: #1f2937;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .journal-title-input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            margin-bottom: 25px;
+        }
+
+        .journal-title-input:focus {
+            outline: none;
+            border-color: #0ea5e9;
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+        }
+
+        .journal-title-input::placeholder {
+            color: #9ca3af;
+        }
+
+        .trades-table-container {
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            margin-bottom: 25px;
+        }
+
+        .trades-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        .trades-table thead {
+            background: linear-gradient(135deg, #0ea5e9, #3b82f6);
+        }
+
+        .trades-table th {
+            padding: 18px 15px;
+            text-align: left;
+            font-weight: 600;
+            color: white;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .trades-table td {
+            padding: 16px 15px;
+            border-bottom: 1px solid #f1f5f9;
+            color: #4b5563;
+            transition: all 0.3s ease;
+        }
+
+        .trades-table tbody tr {
+            transition: all 0.3s ease;
+        }
+
+        .trades-table tbody tr:hover {
+            background: #f8fafc;
+            transform: translateX(5px);
+        }
+
+        .trade-selected {
+            background: #f0f9ff !important;
+            border-left: 4px solid #0ea5e9;
+        }
+
+        .checkbox-cell {
+            text-align: center;
+            width: 60px;
+        }
+
+        .custom-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #d1d5db;
+            border-radius: 6px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .custom-checkbox.checked {
+            background: #0ea5e9;
+            border-color: #0ea5e9;
+        }
+
+        .custom-checkbox.checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .result-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .result-win {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .result-loss {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6b7280;
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #374151;
+        }
+
+        .empty-state p {
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+        }
+
+        .selection-summary {
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            display: none;
+        }
+
+        .selection-summary.show {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .summary-stats {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .summary-stat {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0ea5e9;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #0ea5e9, #3b82f6);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(14, 165, 233, 0.3);
+        }
+
+        .btn-primary:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #374151;
+            border: 1px solid #e5e7eb;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+            transform: translateY(-2px);
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: white;
+            color: #0ea5e9;
+            padding: 12px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .nav-btn:hover {
+            background: #0ea5e9;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(14, 165, 233, 0.3);
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .content-card {
+                padding: 25px;
+            }
+            
+            .trades-table {
+                font-size: 0.9rem;
+            }
+            
+            .trades-table th,
+            .trades-table td {
+                padding: 12px 8px;
+            }
+            
+            .form-actions {
+                justify-content: stretch;
+            }
+            
+            .btn {
+                flex: 1;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .content-card {
+                padding: 20px;
+            }
+            
+            .summary-stats {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+
+        /* Animations */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📖 Create Trading Journal</h1>
+            <p>Share your trading insights and get feedback from the community</p>
+        </div>
+
+        <div class="content-card">
+            <form method="POST" id="journalForm">
+                <!-- Journal Title -->
+                <div class="form-section">
+                    <h2 class="section-title">✏️ Journal Title</h2>
+                    <input type="text" 
+                           name="journal_title" 
+                           class="journal-title-input" 
+                           placeholder="Give your journal a meaningful title (e.g., 'My Best Forex Trades - November 2024')"
+                           maxlength="100">
+                </div>
+
+                <!-- Trades Selection -->
+                <div class="form-section">
+                    <h2 class="section-title">📊 Select Trades to Share</h2>
+                    
+                    {% if trades %}
+                        <!-- Selection Summary -->
+                        <div class="selection-summary" id="selectionSummary">
+                            <div class="summary-stats">
+                                <div class="summary-stat">
+                                    <div class="stat-value" id="selectedCount">0</div>
+                                    <div class="stat-label">Trades Selected</div>
+                                </div>
+                                <div class="summary-stat">
+                                    <div class="stat-value" id="winCount">0</div>
+                                    <div class="stat-label">Winning Trades</div>
+                                </div>
+                                <div class="summary-stat">
+                                    <div class="stat-value" id="lossCount">0</div>
+                                    <div class="stat-label">Losing Trades</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Trades Table -->
+                        <div class="trades-table-container">
+                            <table class="trades-table">
+                                <thead>
+                                    <tr>
+                                        <th class="checkbox-cell">
+                                            <div class="custom-checkbox" id="selectAllCheckbox"></div>
+                                        </th>
+                                        <th>Currency Pair</th>
+                                        <th>Result</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for trade in trades %}
+                                    <tr data-trade-id="{{ trade[0] }}" data-result="{{ trade[2].lower() }}">
+                                        <td class="checkbox-cell">
+                                            <div class="custom-checkbox" data-trade-id="{{ trade[0] }}"></div>
+                                            <input type="checkbox" name="trade_ids" value="{{ trade[0] }}" style="display: none;">
+                                        </td>
+                                        <td style="font-weight: 600; color: #1f2937;">{{ trade[1] }}</td>
+                                        <td>
+                                            <span class="result-badge {% if trade[2].lower() == 'win' %}result-win{% else %}result-loss{% endif %}">
+                                                {{ trade[2] }}
+                                            </span>
+                                        </td>
+                                        <td style="color: #6b7280;">{{ trade[3] }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="form-actions">
+                            <a href="/dashboard" class="btn btn-secondary">
+                                ← Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary" id="submitBtn" disabled>
+                                📚 Create Shared Journal
+                            </button>
+                        </div>
+                    {% else %}
+                        <!-- Empty State -->
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📊</div>
+                            <h3>No Trades Available</h3>
+                            <p>You need to log some trades before you can create a journal.</p>
+                            <a href="/log_trade" class="btn btn-primary">
+                                📝 Log Your First Trade
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+
+        <div class="navigation">
+            <a href="/my_journals" class="nav-btn">
+                📚 View My Journals
+            </a>
+            <a href="/dashboard" class="nav-btn">
+                ← Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkboxes = document.querySelectorAll('.custom-checkbox[data-trade-id]');
+            const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+            const hiddenCheckboxes = document.querySelectorAll('input[name="trade_ids"]');
+            const selectionSummary = document.getElementById('selectionSummary');
+            const submitBtn = document.getElementById('submitBtn');
+            const selectedCountEl = document.getElementById('selectedCount');
+            const winCountEl = document.getElementById('winCount');
+            const lossCountEl = document.getElementById('lossCount');
+            const tableRows = document.querySelectorAll('.trades-table tbody tr');
+
+            // Toggle individual trade selection
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('click', function() {
+                    const tradeId = this.getAttribute('data-trade-id');
+                    const isChecked = this.classList.contains('checked');
+                    
+                    if (isChecked) {
+                        this.classList.remove('checked');
+                        document.querySelector(`input[value="${tradeId}"]`).checked = false;
+                    } else {
+                        this.classList.add('checked');
+                        document.querySelector(`input[value="${tradeId}"]`).checked = true;
+                    }
+                    
+                    updateSelectionSummary();
+                    updateSelectAllState();
+                    updateRowHighlight(tradeId, !isChecked);
+                });
+            });
+
+            // Select all functionality
+            selectAllCheckbox.addEventListener('click', function() {
+                const isChecked = this.classList.contains('checked');
+                
+                checkboxes.forEach(checkbox => {
+                    const tradeId = checkbox.getAttribute('data-trade-id');
+                    if (!isChecked) {
+                        checkbox.classList.add('checked');
+                        document.querySelector(`input[value="${tradeId}"]`).checked = true;
+                        updateRowHighlight(tradeId, true);
+                    } else {
+                        checkbox.classList.remove('checked');
+                        document.querySelector(`input[value="${tradeId}"]`).checked = false;
+                        updateRowHighlight(tradeId, false);
+                    }
+                });
+                
+                this.classList.toggle('checked');
+                updateSelectionSummary();
+            });
+
+            // Update selection summary
+            function updateSelectionSummary() {
+                const selectedCount = document.querySelectorAll('.custom-checkbox.checked').length;
+                const selectedWins = document.querySelectorAll('.custom-checkbox.checked[data-trade-id]')
+                    .filter(cb => {
+                        const row = document.querySelector(`tr[data-trade-id="${cb.getAttribute('data-trade-id')}"]`);
+                        return row.getAttribute('data-result') === 'win';
+                    }).length;
+                const selectedLosses = selectedCount - selectedWins;
+
+                selectedCountEl.textContent = selectedCount;
+                winCountEl.textContent = selectedWins;
+                lossCountEl.textContent = selectedLosses;
+
+                // Show/hide summary
+                if (selectedCount > 0) {
+                    selectionSummary.classList.add('show');
+                    submitBtn.disabled = false;
+                    submitBtn.classList.add('pulse');
+                    setTimeout(() => submitBtn.classList.remove('pulse'), 500);
+                } else {
+                    selectionSummary.classList.remove('show');
+                    submitBtn.disabled = true;
+                }
+            }
+
+            // Update select all checkbox state
+            function updateSelectAllState() {
+                const totalCheckboxes = checkboxes.length;
+                const checkedCount = document.querySelectorAll('.custom-checkbox.checked').length;
+                
+                if (checkedCount === totalCheckboxes) {
+                    selectAllCheckbox.classList.add('checked');
+                } else {
+                    selectAllCheckbox.classList.remove('checked');
+                }
+            }
+
+            // Update row highlight
+            function updateRowHighlight(tradeId, isSelected) {
+                const row = document.querySelector(`tr[data-trade-id="${tradeId}"]`);
+                if (isSelected) {
+                    row.classList.add('trade-selected');
+                } else {
+                    row.classList.remove('trade-selected');
+                }
+            }
+
+            // Form submission handling
+            document.getElementById('journalForm').addEventListener('submit', function(e) {
+                const selectedCount = document.querySelectorAll('.custom-checkbox.checked').length;
+                if (selectedCount === 0) {
+                    e.preventDefault();
+                    alert('Please select at least one trade to share.');
+                    return;
+                }
+
+                // Add loading state
+                submitBtn.innerHTML = '⏳ Creating Journal...';
+                submitBtn.disabled = true;
+            });
+
+            // Add some interactive effects
+            tableRows.forEach(row => {
+                row.addEventListener('mouseenter', function() {
+                    this.style.cursor = 'pointer';
+                });
+
+                row.addEventListener('click', function(e) {
+                    if (!e.target.classList.contains('custom-checkbox')) {
+                        const checkbox = this.querySelector('.custom-checkbox');
+                        checkbox.click();
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

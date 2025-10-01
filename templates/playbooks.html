@@ -1,0 +1,571 @@
+{% extends "base.html" %}
+
+{% block style %}
+<style>
+    :root {
+        --primary-dark: #093366;
+        --primary-accent: #e3b031;
+        --secondary-accent: #0e81f2;
+        --text-dark: #000000;
+        --text-light: #ffffff;
+        --success-color: #10b981;
+        --warning-color: #f59e0b;
+        --danger-color: #ef4444;
+    }
+    
+    .playbooks-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+    }
+    
+    .playbooks-header {
+        text-align: center;
+        margin-bottom: 3rem;
+        position: relative;
+    }
+    
+    .playbooks-logo {
+        height: 80px;
+        margin-bottom: 1rem;
+        filter: drop-shadow(0 4px 8px rgba(14, 129, 242, 0.2));
+    }
+    
+    .playbooks-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--primary-dark);
+        margin-bottom: 0.5rem;
+    }
+    
+    .playbooks-subtitle {
+        color: #6b7280;
+        font-size: 1.2rem;
+        max-width: 600px;
+        margin: 0 auto;
+        line-height: 1.6;
+    }
+    
+    /* Form Section */
+    .playbook-form-section {
+        background: white;
+        padding: 2rem;
+        border-radius: 16px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        margin-bottom: 3rem;
+        border: 1px solid rgba(14, 129, 242, 0.1);
+    }
+    
+    .form-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary-dark);
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-label {
+        display: block;
+        font-weight: 600;
+        color: var(--primary-dark);
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+    }
+    
+    .form-input, .form-textarea {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        border: 1.5px solid #e5e7eb;
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: #f9fafb;
+        font-family: inherit;
+    }
+    
+    .form-input:focus, .form-textarea:focus {
+        border-color: var(--secondary-accent);
+        background: white;
+        box-shadow: 0 0 0 3px rgba(14, 129, 242, 0.1);
+        outline: none;
+    }
+    
+    .form-textarea {
+        min-height: 120px;
+        resize: vertical;
+    }
+    
+    .file-input-container {
+        position: relative;
+    }
+    
+    .file-input {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        border: 1.5px solid #e5e7eb;
+        border-radius: 10px;
+        background: #f9fafb;
+        cursor: pointer;
+    }
+    
+    .file-input::file-selector-button {
+        background: var(--secondary-accent);
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        margin-right: 1rem;
+        cursor: pointer;
+        font-weight: 600;
+        transition: background 0.3s ease;
+    }
+    
+    .file-input::file-selector-button:hover {
+        background: var(--primary-dark);
+    }
+    
+    .submit-btn {
+        background: linear-gradient(135deg, var(--primary-dark), var(--secondary-accent));
+        color: white;
+        padding: 1rem 2rem;
+        border: none;
+        border-radius: 10px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: 0 4px 12px rgba(14, 129, 242, 0.3);
+    }
+    
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(14, 129, 242, 0.4);
+    }
+    
+    /* Playbooks Grid */
+    .playbooks-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+    
+    .playbook-card {
+        background: white;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        border: 1px solid rgba(14, 129, 242, 0.1);
+        position: relative;
+    }
+    
+    .playbook-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+    }
+    
+    .playbook-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        background: linear-gradient(135deg, rgba(9, 51, 102, 0.1), rgba(14, 129, 242, 0.1));
+    }
+    
+    .playbook-content {
+        padding: 1.5rem;
+    }
+    
+    .playbook-name {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--primary-dark);
+        margin-bottom: 0.75rem;
+        line-height: 1.4;
+    }
+    
+    .playbook-notes {
+        color: #6b7280;
+        line-height: 1.5;
+        margin-bottom: 1.5rem;
+        font-size: 0.95rem;
+    }
+    
+    .playbook-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    
+    .action-btn {
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+    
+    .btn-download {
+        background: var(--secondary-accent);
+        color: white;
+    }
+    
+    .btn-share {
+        background: #8b5cf6;
+        color: white;
+    }
+    
+    .btn-edit {
+        background: var(--primary-accent);
+        color: var(--text-dark);
+    }
+    
+    .btn-delete {
+        background: var(--danger-color);
+        color: white;
+    }
+    
+    .action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+    
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 3rem 2rem;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        border: 2px dashed #e5e7eb;
+    }
+    
+    .empty-icon {
+        font-size: 3rem;
+        color: #d1d5db;
+        margin-bottom: 1rem;
+    }
+    
+    .empty-title {
+        font-size: 1.5rem;
+        color: var(--primary-dark);
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+    }
+    
+    .empty-description {
+        color: #6b7280;
+        margin-bottom: 1.5rem;
+    }
+    
+    /* Section Headers */
+    .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid rgba(14, 129, 242, 0.1);
+    }
+    
+    .section-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--primary-dark);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .playbook-count {
+        background: var(--secondary-accent);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .playbooks-container {
+            padding: 1rem 0.5rem;
+        }
+        
+        .playbooks-title {
+            font-size: 2rem;
+        }
+        
+        .playbook-form-section {
+            padding: 1.5rem;
+        }
+        
+        .playbooks-grid {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+        
+        .playbook-actions {
+            justify-content: center;
+        }
+        
+        .section-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+    }
+    
+    /* Animation */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .animate-fade-in {
+        animation: fadeInUp 0.6s ease-out;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="playbooks-container">
+    <!-- Header Section -->
+    <div class="playbooks-header animate-fade-in">
+        <img src="{{ url_for('static', filename='image/journall.svg') }}" alt="EliteTrader Journal" class="playbooks-logo">
+        <h1 class="playbooks-title">Elite Playbooks</h1>
+        <p class="playbooks-subtitle">Save, share, and download your best trading setups for inspiration and mentoring</p>
+    </div>
+
+    <!-- Create Playbook Form -->
+    <div class="playbook-form-section animate-fade-in">
+        <h2 class="form-title">
+            <i class="fas fa-plus-circle"></i>
+            Create New Playbook
+        </h2>
+        <form method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label class="form-label">Setup Name</label>
+                <input type="text" name="setup_name" required class="form-input" placeholder="Enter a descriptive name for your setup">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Setup Notes</label>
+                <textarea name="notes" class="form-textarea" placeholder="Describe your trading setup, strategy, key indicators, and any important details..."></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Screenshot (Optional)</label>
+                <div class="file-input-container">
+                    <input type="file" name="screenshot" accept="image/*" class="file-input">
+                </div>
+                <small style="color: #6b7280; margin-top: 0.5rem; display: block;">
+                    Upload a chart screenshot or setup diagram (PNG, JPG, JPEG)
+                </small>
+            </div>
+            
+            <button type="submit" class="submit-btn">
+                <i class="fas fa-save"></i>
+                Save Playbook
+            </button>
+        </form>
+    </div>
+
+    <!-- Saved Playbooks Section -->
+    <div class="section-header animate-fade-in">
+        <h2 class="section-title">
+            <i class="fas fa-bookmark"></i>
+            Your Saved Setups
+        </h2>
+        <div class="playbook-count">{{ playbooks|length }} Playbook{% if playbooks|length != 1 %}s{% endif %}</div>
+    </div>
+
+    {% if playbooks %}
+        <div class="playbooks-grid">
+            {% for pb in playbooks %}
+            <div class="playbook-card animate-fade-in">
+                {% if pb[3] %}
+                    <img src="{{ url_for('uploaded_file', filename=pb[3]) }}" alt="{{ pb[1] }}" class="playbook-image">
+                {% else %}
+                    <div class="playbook-image" style="display: flex; align-items: center; justify-content: center; color: #9ca3af;">
+                        <i class="fas fa-chart-line" style="font-size: 3rem;"></i>
+                    </div>
+                {% endif %}
+                
+                <div class="playbook-content">
+                    <h3 class="playbook-name">{{ pb[1] }}</h3>
+                    <p class="playbook-notes">{{ pb[2] or "No additional notes provided." }}</p>
+                    
+                    <div class="playbook-actions">
+                        {% if pb[3] %}
+                            <a href="{{ url_for('download_playbook', filename=pb[3]) }}" download class="action-btn btn-download">
+                                <i class="fas fa-download"></i>
+                                Download
+                            </a>
+                            <button onclick="sharePlaybook('{{ url_for('uploaded_file', filename=pb[3]) }}')" class="action-btn btn-share">
+                                <i class="fas fa-share-alt"></i>
+                                Share
+                            </button>
+                        {% endif %}
+                        <a href="{{ url_for('edit_playbook', pb_id=pb[0]) }}" class="action-btn btn-edit">
+                            <i class="fas fa-edit"></i>
+                            Edit
+                        </a>
+                        <form method="POST" action="/delete_playbook/{{ pb[0] }}" style="display: inline;">
+                            <button type="submit" class="action-btn btn-delete" onclick="return confirm('Are you sure you want to delete this playbook?')">
+                                <i class="fas fa-trash"></i>
+                                Delete
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state animate-fade-in">
+            <div class="empty-icon">
+                <i class="fas fa-book-open"></i>
+            </div>
+            <h3 class="empty-title">No Playbooks Yet</h3>
+            <p class="empty-description">Start by creating your first trading playbook to save and organize your best setups.</p>
+            <button onclick="document.querySelector('.playbook-form-section').scrollIntoView({ behavior: 'smooth' })" class="submit-btn">
+                <i class="fas fa-plus"></i>
+                Create Your First Playbook
+            </button>
+        </div>
+    {% endif %}
+</div>
+
+<script>
+    function sharePlaybook(imageUrl) {
+        const fullUrl = window.location.origin + imageUrl;
+        
+        if (navigator.share) {
+            navigator.share({
+                title: 'Check out this trading setup',
+                text: 'I found this great trading setup on EliteTrader Journal',
+                url: fullUrl
+            })
+            .then(() => console.log('Successful share'))
+            .catch((error) => {
+                // Fallback to clipboard if sharing fails
+                copyToClipboard(fullUrl);
+            });
+        } else {
+            // Fallback for browsers that don't support Web Share API
+            copyToClipboard(fullUrl);
+        }
+    }
+    
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(() => {
+            // Show success message
+            showNotification('Image link copied to clipboard!', 'success');
+        }).catch(err => {
+            // Fallback for older browsers
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showNotification('Image link copied to clipboard!', 'success');
+            } catch (err) {
+                showNotification('Failed to copy link', 'error');
+            }
+            document.body.removeChild(textArea);
+        });
+    }
+    
+    function showNotification(message, type) {
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+            background: ${type === 'success' ? '#10b981' : '#ef4444'};
+        `;
+        notification.textContent = message;
+        
+        document.body.appendChild(notification);
+        
+        // Remove notification after 3 seconds
+        setTimeout(() => {
+            notification.style.opacity = '0';
+            notification.style.transform = 'translateX(100%)';
+            setTimeout(() => {
+                document.body.removeChild(notification);
+            }, 300);
+        }, 3000);
+    }
+    
+    // Add some interactive effects
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add loading state to form submission
+        const form = document.querySelector('form');
+        if (form) {
+            form.addEventListener('submit', function() {
+                const submitBtn = this.querySelector('.submit-btn');
+                if (submitBtn) {
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+                    submitBtn.disabled = true;
+                }
+            });
+        }
+        
+        // Animate cards on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        // Observe all playbook cards
+        document.querySelectorAll('.playbook-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
+        });
+    });
+</script>
+{% endblock %}

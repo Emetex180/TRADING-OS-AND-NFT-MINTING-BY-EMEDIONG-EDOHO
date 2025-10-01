@@ -1,0 +1,524 @@
+{% extends "base.html" %}
+
+{% block style %}
+<style>
+    :root {
+        --primary-dark: #093366;
+        --primary-accent: #e3b031;
+        --secondary-accent: #0e81f2;
+        --text-dark: #000000;
+        --text-light: #ffffff;
+    }
+    
+    .register-container {
+        min-height: calc(100vh - 80px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, rgba(9, 51, 102, 0.05) 0%, rgba(14, 129, 242, 0.05) 100%);
+        padding: 2rem 1rem;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .register-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%230e81f2" fill-opacity="0.03" d="M0,160L48,170.7C96,181,192,203,288,197.3C384,192,480,160,576,165.3C672,171,768,213,864,213.3C960,213,1056,171,1152,149.3C1248,128,1344,128,1392,128L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+        background-size: cover;
+        background-position: bottom;
+    }
+    
+    .register-card {
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        padding: 3rem;
+        width: 100%;
+        max-width: 520px;
+        position: relative;
+        z-index: 1;
+        border: 1px solid rgba(14, 129, 242, 0.1);
+    }
+    
+    .register-header {
+        text-align: center;
+        margin-bottom: 2.5rem;
+    }
+    
+    .register-icon {
+        background: linear-gradient(135deg, var(--primary-dark), var(--secondary-accent));
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        box-shadow: 0 8px 20px rgba(14, 129, 242, 0.3);
+    }
+    
+    .register-icon i {
+        color: white;
+        font-size: 2rem;
+    }
+    
+    .register-title {
+        font-size: 2.25rem;
+        font-weight: 700;
+        color: var(--primary-dark);
+        margin-bottom: 0.5rem;
+    }
+    
+    .register-subtitle {
+        color: #6b7280;
+        font-size: 1.1rem;
+    }
+    
+    .register-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+    
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.25rem;
+    }
+    
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .form-group.full-width {
+        grid-column: 1 / -1;
+    }
+    
+    .form-label {
+        font-weight: 600;
+        color: var(--primary-dark);
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .form-label i {
+        color: var(--secondary-accent);
+        font-size: 0.8rem;
+    }
+    
+    .form-input, .form-select {
+        padding: 0.875rem 1rem;
+        border: 1.5px solid #e5e7eb;
+        border-radius: 10px;
+        font-size: 1rem;
+        outline: none;
+        transition: all 0.3s ease;
+        background: #f9fafb;
+        width: 100%;
+    }
+    
+    .form-input:focus, .form-select:focus {
+        border-color: var(--secondary-accent);
+        background: white;
+        box-shadow: 0 0 0 3px rgba(14, 129, 242, 0.1);
+    }
+    
+    .form-select {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+        background-position: right 0.75rem center;
+        background-repeat: no-repeat;
+        background-size: 1.5em 1.5em;
+        padding-right: 2.5rem;
+    }
+    
+    .terms-group {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+        margin: 1rem 0;
+    }
+    
+    .terms-checkbox {
+        width: 1.25rem;
+        height: 1.25rem;
+        border: 2px solid #d1d5db;
+        border-radius: 4px;
+        margin-top: 0.25rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+    
+    .terms-checkbox:checked {
+        background-color: var(--secondary-accent);
+        border-color: var(--secondary-accent);
+    }
+    
+    .terms-label {
+        font-size: 0.9rem;
+        color: #6b7280;
+        line-height: 1.4;
+    }
+    
+    .terms-link {
+        color: var(--secondary-accent);
+        text-decoration: none;
+        font-weight: 600;
+    }
+    
+    .terms-link:hover {
+        text-decoration: underline;
+    }
+    
+    .register-button {
+        padding: 1rem 1.5rem;
+        background: linear-gradient(135deg, var(--primary-dark), var(--secondary-accent));
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        box-shadow: 0 4px 12px rgba(14, 129, 242, 0.3);
+    }
+    
+    .register-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(14, 129, 242, 0.4);
+    }
+    
+    .register-button:active {
+        transform: translateY(0);
+    }
+    
+    .login-redirect {
+        text-align: center;
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #e5e7eb;
+    }
+    
+    .login-redirect p {
+        color: #6b7280;
+        margin-bottom: 1rem;
+    }
+    
+    .login-link {
+        color: var(--secondary-accent);
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .login-link:hover {
+        color: var(--primary-dark);
+    }
+    
+    .password-container {
+        position: relative;
+    }
+    
+    .password-toggle {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: #9ca3af;
+        cursor: pointer;
+        font-size: 1rem;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 640px) {
+        .register-card {
+            padding: 2rem 1.5rem;
+        }
+        
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .register-title {
+            font-size: 2rem;
+        }
+    }
+    
+    /* Animation */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .animate-fade-in-up {
+        animation: fadeInUp 0.6s ease-out;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="register-container">
+    <div class="register-card animate-fade-in-up">
+        <div class="register-header">
+            <div class="register-icon">
+                <i class="fas fa-user-plus"></i>
+            </div>
+            <h1 class="register-title">Join EliteTrader Journal</h1>
+            <p class="register-subtitle">Start your journey to becoming an elite trader</p>
+        </div>
+        
+        <form method="post" class="register-form">
+            {% if csrf_token %}
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            {% endif %}
+
+            <div class="form-grid">
+                <!-- Personal Information -->
+                <div class="form-group full-width">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center">
+                        <i class="fas fa-user-circle mr-2"></i>
+                        Personal Information
+                    </h3>
+                </div>
+                
+                <div class="form-group">
+                    <label for="fullname" class="form-label">
+                        <i class="fas fa-user"></i>
+                        Full Name
+                    </label>
+                    <input id="fullname" name="fullname" type="text" required
+                           class="form-input" placeholder="John Doe">
+                </div>
+                
+                <div class="form-group">
+                    <label for="username" class="form-label">
+                        <i class="fas fa-at"></i>
+                        Username
+                    </label>
+                    <input id="username" name="username" type="text" required
+                           class="form-input" placeholder="johndoe123">
+                </div>
+                
+                <div class="form-group">
+                    <label for="email" class="form-label">
+                        <i class="fas fa-envelope"></i>
+                        Email Address
+                    </label>
+                    <input id="email" name="email" type="email" required
+                           class="form-input" placeholder="you@example.com">
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone" class="form-label">
+                        <i class="fas fa-phone"></i>
+                        Phone Number
+                    </label>
+                    <input id="phone" name="phone" type="tel" required
+                           class="form-input" placeholder="+1234567890">
+                </div>
+
+                <!-- Trading Profile -->
+                <div class="form-group full-width">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center">
+                        <i class="fas fa-chart-line mr-2"></i>
+                        Trading Profile
+                    </h3>
+                </div>
+                
+                <div class="form-group">
+                    <label for="experience" class="form-label">
+                        <i class="fas fa-graduation-cap"></i>
+                        Trading Experience
+                    </label>
+                    <select id="experience" name="experience" required class="form-select">
+                        <option value="">Select level</option>
+                        <option value="beginner">Beginner</option>
+                        <option value="intermediate">Intermediate</option>
+                        <option value="advanced">Advanced</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="risk_tolerance" class="form-label">
+                        <i class="fas fa-shield-alt"></i>
+                        Risk Tolerance
+                    </label>
+                    <select id="risk_tolerance" name="risk_tolerance" required class="form-select">
+                        <option value="">Select tolerance</option>
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="account_type" class="form-label">
+                        <i class="fas fa-wallet"></i>
+                        Account Type
+                    </label>
+                    <select id="account_type" name="account_type" required class="form-select">
+                        <option value="">Select account</option>
+                        <option value="demo">Demo</option>
+                        <option value="live">Live</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="trader_type" class="form-label">
+                        <i class="fas fa-trade-federation"></i>
+                        Trader Type
+                    </label>
+                    <select id="trader_type" name="trader_type" required class="form-select">
+                        <option value="" disabled selected>Select your style</option>
+                        <option value="Scalper">Scalper</option>
+                        <option value="Day Trader">Day Trader</option>
+                        <option value="Swing Trader">Swing Trader</option>
+                        <option value="Position Trader">Position Trader</option>
+                        <option value="Investor">Investor</option>
+                    </select>
+                </div>
+
+                <!-- Security -->
+                <div class="form-group full-width">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center">
+                        <i class="fas fa-lock mr-2"></i>
+                        Security
+                    </h3>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password" class="form-label">
+                        <i class="fas fa-key"></i>
+                        Password
+                    </label>
+                    <div class="password-container">
+                        <input id="password" name="password" type="password" required
+                               class="form-input" placeholder="••••••••" style="padding-right: 3rem;">
+                        <button type="button" class="password-toggle" id="togglePassword">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirm_password" class="form-label">
+                        <i class="fas fa-key"></i>
+                        Confirm Password
+                    </label>
+                    <div class="password-container">
+                        <input id="confirm_password" name="confirm_password" type="password" required
+                               class="form-input" placeholder="••••••••" style="padding-right: 3rem;">
+                        <button type="button" class="password-toggle" id="toggleConfirmPassword">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Terms -->
+                <div class="form-group full-width">
+                    <div class="terms-group">
+                        <input id="terms" name="terms" type="checkbox" required class="terms-checkbox">
+                        <label for="terms" class="terms-label">
+                            I agree to the <a href="/terms" class="terms-link">Terms & Conditions</a> and 
+                            <a href="/privacy" class="terms-link">Privacy Policy</a>. I understand that trading involves risk and I am solely responsible for my trading decisions.
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="register-button">
+                <i class="fas fa-rocket"></i>
+                Start Your Journey
+            </button>
+        </form>
+        
+        <div class="login-redirect">
+            <p>Already part of our elite community?</p>
+            <a href="{{ url_for('login') }}" class="login-link">
+                <i class="fas fa-sign-in-alt"></i>
+                Sign In to Your Account
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Password visibility toggle
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+        const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+        const confirmPasswordInput = document.getElementById('confirm_password');
+        
+        function setupPasswordToggle(toggle, input) {
+            toggle.addEventListener('click', function() {
+                const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+                input.setAttribute('type', type);
+                
+                const icon = this.querySelector('i');
+                if (type === 'password') {
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                } else {
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                }
+            });
+        }
+        
+        setupPasswordToggle(togglePassword, passwordInput);
+        setupPasswordToggle(toggleConfirmPassword, confirmPasswordInput);
+        
+        // Form validation
+        const form = document.querySelector('.register-form');
+        form.addEventListener('submit', function(e) {
+            const password = passwordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+            
+            if (password !== confirmPassword) {
+                e.preventDefault();
+                alert('Passwords do not match. Please check and try again.');
+                confirmPasswordInput.focus();
+            }
+        });
+        
+        // Add focus effect to inputs
+        const inputs = document.querySelectorAll('.form-input, .form-select');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.classList.add('focused');
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.classList.remove('focused');
+            });
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<section style="max-width: 600px; margin: 2rem auto; padding: 1rem; background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.07);">
+    <h2 style="color:#0ea5e9; font-size:2rem; font-weight:700; margin-bottom:1rem;">Edit Playbook</h2>
+    <form method="POST" enctype="multipart/form-data">
+        <div style="margin-bottom: 1rem;">
+            <label style="font-weight:600;">Setup Name:</label>
+            <input type="text" name="setup_name" value="{{ playbook[1] }}" required style="width: 100%; padding: 0.5rem; border-radius:6px; border:1px solid #bae6fd;">
+        </div>
+        <div style="margin-bottom: 1rem;">
+            <label style="font-weight:600;">Notes:</label>
+            <textarea name="notes" style="width: 100%; padding: 0.5rem; border-radius:6px; border:1px solid #bae6fd;">{{ playbook[2] }}</textarea>
+        </div>
+        <div style="margin-bottom: 1rem;">
+            <label style="font-weight:600;">Screenshot (optional):</label><br>
+            {% if playbook[3] %}
+                <img src="{{ url_for('uploaded_file', filename=playbook[3]) }}" width="180" style="border-radius: 10px; margin-bottom:0.7rem; box-shadow:0 2px 8px #0ea5e933;">
+            {% endif %}
+            <input type="file" name="screenshot" accept="image/*">
+        </div>
+        <button type="submit" style="background-color: #0ea5e9; color: white; padding: 0.5rem 1.2rem; border: none; border-radius: 8px; font-weight:600; cursor: pointer;">Update Playbook</button>
+        <a href="/playbooks" style="margin-left:1rem; color:#334155; text-decoration:underline;">Cancel</a>
+    </form>
+</section>
+{% endblock %}

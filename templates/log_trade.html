@@ -1,0 +1,556 @@
+{% extends "base.html" %}
+
+{% block style %}
+<style>
+    :root {
+        --primary-dark: #093366;
+        --primary-accent: #e3b031;
+        --secondary-accent: #0e81f2;
+        --text-dark: #000000;
+        --text-light: #ffffff;
+        --success-color: #10b981;
+        --warning-color: #f59e0b;
+        --danger-color: #ef4444;
+    }
+    
+    .log-trade-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+    }
+    
+    .page-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+    
+    .page-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--primary-dark);
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+    }
+    
+    .page-subtitle {
+        color: #6b7280;
+        font-size: 1.1rem;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+    
+    /* Form Styles */
+    .trade-form {
+        background: white;
+        padding: 2.5rem;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(14, 129, 242, 0.1);
+        animation: fadeInUp 0.6s ease-out;
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .form-section {
+        margin-bottom: 2.5rem;
+        padding-bottom: 2rem;
+        border-bottom: 2px solid rgba(14, 129, 242, 0.1);
+    }
+    
+    .form-section:last-of-type {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+    
+    .section-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--primary-dark);
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid var(--primary-accent);
+    }
+    
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+    }
+    
+    @media (max-width: 768px) {
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+    
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-group.full-width {
+        grid-column: 1 / -1;
+    }
+    
+    .form-label {
+        display: block;
+        font-weight: 600;
+        color: var(--primary-dark);
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .form-label i {
+        color: var(--secondary-accent);
+        font-size: 0.8rem;
+    }
+    
+    .required::after {
+        content: " *";
+        color: var(--danger-color);
+    }
+    
+    .input-field, .form-select, .form-textarea {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        border: 1.5px solid #e5e7eb;
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: #f9fafb;
+        font-family: inherit;
+    }
+    
+    .input-field:focus, .form-select:focus, .form-textarea:focus {
+        border-color: var(--secondary-accent);
+        background: white;
+        box-shadow: 0 0 0 3px rgba(14, 129, 242, 0.1);
+        outline: none;
+    }
+    
+    .form-textarea {
+        min-height: 100px;
+        resize: vertical;
+    }
+    
+    .form-select {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+        background-position: right 0.75rem center;
+        background-repeat: no-repeat;
+        background-size: 1.5em 1.5em;
+        padding-right: 2.5rem;
+    }
+    
+    .file-input-container {
+        position: relative;
+    }
+    
+    .file-input {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        border: 1.5px solid #e5e7eb;
+        border-radius: 10px;
+        background: #f9fafb;
+        cursor: pointer;
+    }
+    
+    .file-input::file-selector-button {
+        background: var(--secondary-accent);
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        margin-right: 1rem;
+        cursor: pointer;
+        font-weight: 600;
+        transition: background 0.3s ease;
+    }
+    
+    .file-input::file-selector-button:hover {
+        background: var(--primary-dark);
+    }
+    
+    .form-help {
+        color: #6b7280;
+        font-size: 0.85rem;
+        margin-top: 0.5rem;
+        display: block;
+    }
+    
+    /* Result Indicator */
+    .result-indicator {
+        display: flex;
+        gap: 1rem;
+        margin-top: 0.5rem;
+    }
+    
+    .result-option {
+        flex: 1;
+        text-align: center;
+        padding: 0.75rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 600;
+    }
+    
+    .result-option.win {
+        color: #059669;
+    }
+    
+    .result-option.loss {
+        color: #dc2626;
+    }
+    
+    .result-option.selected {
+        border-color: currentColor;
+        background: rgba(5, 150, 105, 0.05);
+    }
+    
+    .result-option.win.selected {
+        background: rgba(5, 150, 105, 0.1);
+    }
+    
+    .result-option.loss.selected {
+        background: rgba(220, 38, 38, 0.1);
+    }
+    
+    /* Submit Button */
+    .submit-btn {
+        width: 100%;
+        padding: 1.25rem 2rem;
+        background: linear-gradient(135deg, var(--primary-dark), var(--secondary-accent));
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        box-shadow: 0 4px 15px rgba(14, 129, 242, 0.3);
+        margin-top: 1rem;
+    }
+    
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(14, 129, 242, 0.4);
+    }
+    
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+    
+    /* Form Validation */
+    .input-field:invalid, .form-select:invalid {
+        border-color: #f87171;
+    }
+    
+    .input-field:valid, .form-select:valid {
+        border-color: #34d399;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 640px) {
+        .log-trade-container {
+            padding: 1rem 0.5rem;
+        }
+        
+        .trade-form {
+            padding: 2rem 1.5rem;
+        }
+        
+        .page-title {
+            font-size: 2rem;
+        }
+        
+        .section-title {
+            font-size: 1.1rem;
+        }
+        
+        .result-indicator {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+    }
+    
+    /* Loading State */
+    .submit-btn.loading {
+        pointer-events: none;
+        opacity: 0.8;
+    }
+    
+    .submit-btn.loading::after {
+        content: '';
+        width: 1rem;
+        height: 1rem;
+        border: 2px solid transparent;
+        border-top: 2px solid white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-left: 0.5rem;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="log-trade-container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1 class="page-title">
+            <i class="fas fa-plus-circle"></i>
+            Log New Trade
+        </h1>
+        <p class="page-subtitle">Record your trading activity with detailed insights for better analysis</p>
+    </div>
+
+    <!-- Trade Form -->
+    <form method="POST" enctype="multipart/form-data" class="trade-form" id="tradeForm">
+        <!-- Trade Details Section -->
+        <div class="form-section">
+            <h2 class="section-title">
+                <i class="fas fa-chart-line"></i>
+                Trade Details
+            </h2>
+            
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="pair" class="form-label required">
+                        <i class="fas fa-exchange-alt"></i>
+                        Trading Pair
+                    </label>
+                    <input type="text" name="pair" id="pair" placeholder="e.g. EUR/USD, BTC/USD" required class="input-field">
+                    <small class="form-help">Enter the currency pair or asset you traded</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="date" class="form-label required">
+                        <i class="fas fa-calendar-alt"></i>
+                        Trade Date
+                    </label>
+                    <input type="date" name="date" id="date" required class="input-field">
+                </div>
+
+                <div class="form-group">
+                    <label for="entry" class="form-label required">
+                        <i class="fas fa-arrow-up"></i>
+                        Entry Price
+                    </label>
+                    <input type="number" step="any" name="entry" id="entry" placeholder="0.00" required class="input-field">
+                </div>
+
+                <div class="form-group">
+                    <label for="exit" class="form-label required">
+                        <i class="fas fa-arrow-down"></i>
+                        Exit Price
+                    </label>
+                    <input type="number" step="any" name="exit" id="exit" placeholder="0.00" required class="input-field">
+                </div>
+            </div>
+        </div>
+
+        <!-- Trade Outcome Section -->
+        <div class="form-section">
+            <h2 class="section-title">
+                <i class="fas fa-trophy"></i>
+                Trade Outcome
+            </h2>
+            
+            <div class="form-group">
+                <label class="form-label required">
+                    <i class="fas fa-balance-scale"></i>
+                    Result
+                </label>
+                <select name="result" id="result" required class="form-select">
+                    <option value="" disabled selected>Select trade outcome</option>
+                    <option value="Win">Win - Profitable Trade</option>
+                    <option value="Loss">Loss - Unprofitable Trade</option>
+                    <option value="Break Even">Break Even</option>
+                </select>
+                
+                <div class="result-indicator">
+                    <div class="result-option win" data-value="Win">
+                        <i class="fas fa-check-circle"></i> Win
+                    </div>
+                    <div class="result-option loss" data-value="Loss">
+                        <i class="fas fa-times-circle"></i> Loss
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Psychology & Analysis Section -->
+        <div class="form-section">
+            <h2 class="section-title">
+                <i class="fas fa-brain"></i>
+                Psychology & Analysis
+            </h2>
+            
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="emotions" class="form-label">
+                        <i class="fas fa-heart"></i>
+                        Emotional State
+                    </label>
+                    <input type="text" name="emotions" id="emotions" placeholder="e.g. Confident, Anxious, Calm" class="input-field">
+                    <small class="form-help">How did you feel during this trade?</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="rule_violations" class="form-label">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Rule Violations
+                    </label>
+                    <input type="text" name="rule_violations" id="rule_violations" placeholder="e.g. No Stop Loss, Overtrading" class="input-field">
+                    <small class="form-help">Any trading rules you broke?</small>
+                </div>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="notes" class="form-label">
+                    <i class="fas fa-sticky-note"></i>
+                    Trade Notes & Analysis
+                </label>
+                <textarea name="notes" id="notes" placeholder="Describe your setup, strategy, what went well, what you learned..." class="form-textarea"></textarea>
+                <small class="form-help">Detailed notes help with future analysis and improvement</small>
+            </div>
+        </div>
+
+        <!-- Screenshot Section -->
+        <div class="form-section">
+            <h2 class="section-title">
+                <i class="fas fa-camera"></i>
+                Visual Documentation
+            </h2>
+            
+            <div class="form-group full-width">
+                <label for="screenshot" class="form-label">
+                    <i class="fas fa-image"></i>
+                    Chart Screenshot
+                </label>
+                <div class="file-input-container">
+                    <input type="file" name="screenshot" id="screenshot" accept="image/*" class="file-input">
+                </div>
+                <small class="form-help">Upload a screenshot of your trading chart (optional but recommended)</small>
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="submit-btn" id="submitBtn">
+            <i class="fas fa-save"></i>
+            Save Trade Entry
+        </button>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Set today's date as default
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('date').value = today;
+        
+        // Result selection with visual indicators
+        const resultSelect = document.getElementById('result');
+        const resultOptions = document.querySelectorAll('.result-option');
+        
+        resultOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                const value = this.getAttribute('data-value');
+                resultSelect.value = value;
+                
+                // Update visual selection
+                resultOptions.forEach(opt => opt.classList.remove('selected'));
+                this.classList.add('selected');
+            });
+        });
+        
+        // Update visual selection when dropdown changes
+        resultSelect.addEventListener('change', function() {
+            const value = this.value;
+            resultOptions.forEach(opt => {
+                opt.classList.remove('selected');
+                if (opt.getAttribute('data-value') === value) {
+                    opt.classList.add('selected');
+                }
+            });
+        });
+        
+        // Form submission handling
+        const form = document.getElementById('tradeForm');
+        const submitBtn = document.getElementById('submitBtn');
+        
+        form.addEventListener('submit', function(e) {
+            // Add loading state
+            submitBtn.classList.add('loading');
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving Trade...';
+            
+            // You could add additional validation here if needed
+        });
+        
+        // Calculate and display P/L when prices are entered
+        const entryInput = document.getElementById('entry');
+        const exitInput = document.getElementById('exit');
+        
+        function calculatePL() {
+            const entry = parseFloat(entryInput.value);
+            const exit = parseFloat(exitInput.value);
+            
+            if (entry && exit) {
+                const pl = exit - entry;
+                const plPercent = ((pl / entry) * 100).toFixed(2);
+                
+                // You could display this somewhere if you add a P/L display element
+                console.log(`P/L: ${pl.toFixed(4)} (${plPercent}%)`);
+            }
+        }
+        
+        entryInput.addEventListener('input', calculatePL);
+        exitInput.addEventListener('input', calculatePL);
+        
+        // File input preview (optional enhancement)
+        const fileInput = document.getElementById('screenshot');
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                // You could add a preview feature here
+                console.log('File selected:', file.name);
+            }
+        });
+        
+        // Auto-format pair input
+        const pairInput = document.getElementById('pair');
+        pairInput.addEventListener('input', function(e) {
+            // Convert to uppercase and remove spaces
+            this.value = this.value.toUpperCase().replace(/\s+/g, '');
+        });
+    });
+</script>
+{% endblock %}
