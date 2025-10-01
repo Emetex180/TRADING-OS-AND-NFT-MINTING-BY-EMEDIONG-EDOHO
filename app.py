@@ -141,16 +141,33 @@ def register():
                 writer.writerow([username, email])
 
             # Send welcome email
-            msg_user = Message("Welcome to EliteTrader Journal!", recipients=[email])
+            msg_user = Message(
+                "Welcome to EliteTrader Journal!", 
+                recipients=[email]
+            )
             msg_user.html = f"""
             <h2>Welcome to EliteTrader Journal, {username}!</h2>
-            <p>We're thrilled to have you join our trading community!</p>
+            <p>We're thrilled to have you join our trading community! 🎉</p>
+
+            <p>At EliteTrader Journal, you'll gain access to:</p>
+            <ul>
+                <li>Exclusive trading insights and strategies</li>
+                <li>Community discussions with experienced traders</li>
+                <li>Tools to track and analyze your trades</li>
+                <li>Educational resources to grow your skills</li>
+            </ul>
+
+            <p>We’re excited to support you on your trading journey. Let’s reach new heights together!</p>
+
+            <p>Happy trading,<br>
+            <strong>The EliteTrader Team</strong></p>
             """
             mail.send(msg_user)
 
+
             # Notify admin
             msg_admin = Message(f"New Registration: {username}", recipients=[app.config['MAIL_USERNAME']])
-            msg_admin.body = f"New user registered: {username} ({email})"
+            msg_admin.body = f"New user registered to Elite Trader Journal: {username} ({email})"
             mail.send(msg_admin)
 
             flash("Registration successful! Check your email.", "success")
