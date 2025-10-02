@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 
 {% block style %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
     :root {
         --primary-dark: #093366;
@@ -13,524 +15,113 @@
         --danger-color: #ef4444;
     }
     
+    body {
+        background-color: #f8fafc;
+    }
+    
     .dashboard-container {
         max-width: 1400px;
         margin: 0 auto;
-        padding: 1rem;
     }
     
-    /* Mobile First Approach */
-    @media (max-width: 768px) {
-        .dashboard-container {
-            padding: 0.5rem;
-        }
-    }
-    
-    .dashboard-header {
-        text-align: center;
-        margin-bottom: 2rem;
-        padding: 0 1rem;
-    }
-    
-    .dashboard-title {
-        font-size: clamp(1.8rem, 4vw, 2.5rem);
-        font-weight: 700;
-        color: var(--primary-dark);
-        margin-bottom: 0.5rem;
-        line-height: 1.2;
-    }
-    
-    .dashboard-subtitle {
-        color: #6b7280;
-        font-size: clamp(0.9rem, 2vw, 1.1rem);
-        max-width: 600px;
-        margin: 0 auto;
-        line-height: 1.4;
-    }
-    
-    /* Quick Actions Section - Improved Responsiveness */
-    .quick-actions {
-        background: linear-gradient(135deg, rgba(9, 51, 102, 0.05), rgba(14, 129, 242, 0.05));
-        border: 1px solid rgba(14, 129, 242, 0.1);
-        padding: 1.5rem;
-        border-radius: 16px;
-        margin-bottom: 2rem;
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    }
-    
-    @media (min-width: 768px) {
-        .quick-actions {
-            flex-direction: row;
-            align-items: center;
-            justify-content: space-between;
-        }
-    }
-    
-    .quick-actions-content h3 {
-        font-size: clamp(1.2rem, 3vw, 1.4rem);
-        color: var(--primary-dark);
-        margin-bottom: 0.5rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-    
-    .quick-actions-content p {
-        color: #6b7280;
-        margin-bottom: 1rem;
-        font-size: clamp(0.9rem, 2vw, 1rem);
-    }
-    
-    .action-buttons {
-        display: flex;
-        flex-direction: column;
-        gap: 0.75rem;
-        width: 100%;
-    }
-    
-    @media (min-width: 480px) {
-        .action-buttons {
-            flex-direction: row;
-            width: auto;
-        }
-    }
-    
-    .btn {
-        padding: 0.75rem 1.5rem;
-        border-radius: 10px;
-        font-weight: 600;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-        transition: all 0.3s ease;
-        border: none;
-        cursor: pointer;
-        font-size: clamp(0.9rem, 2vw, 1rem);
-        text-align: center;
-        flex: 1;
-    }
-    
-    @media (min-width: 480px) {
-        .btn {
-            flex: none;
-        }
-    }
-    
-    .btn-primary {
-        background: linear-gradient(135deg, var(--primary-dark), var(--secondary-accent));
-        color: white;
-        box-shadow: 0 4px 12px rgba(14, 129, 242, 0.3);
-    }
-    
-    .btn-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(14, 129, 242, 0.4);
-    }
-    
-    .btn-secondary {
+    /* Custom card styles */
+    .custom-card {
         background: white;
-        color: var(--secondary-accent);
-        border: 2px solid var(--secondary-accent);
+        border-radius: 16px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        border: none;
+        margin-bottom: 1.5rem;
     }
     
-    .btn-secondary:hover {
-        background: var(--secondary-accent);
-        color: white;
+    .quick-actions-card {
+        background: linear-gradient(135deg, rgba(9, 51, 102, 0.05), rgba(14, 129, 242, 0.05)) !important;
+        border: 1px solid rgba(14, 129, 242, 0.1) !important;
     }
     
-    /* Stats Grid - Improved Responsiveness */
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1rem;
-        margin-bottom: 2rem;
-    }
-    
-    @media (max-width: 480px) {
-        .stats-grid {
-            grid-template-columns: 1fr;
-            gap: 0.75rem;
-        }
+    .community-card-custom {
+        background: linear-gradient(135deg, rgba(9, 51, 102, 0.05), rgba(14, 129, 242, 0.05)) !important;
+        border: 1px solid rgba(14, 129, 242, 0.1) !important;
     }
     
     .stat-card {
-        background: white;
-        padding: 1.25rem;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
         border-left: 4px solid var(--secondary-accent);
         transition: transform 0.3s ease;
-        text-align: center;
     }
     
     .stat-card:hover {
         transform: translateY(-3px);
     }
     
-    .stat-value {
-        font-size: clamp(1.5rem, 4vw, 2rem);
+    .dashboard-title {
+        font-size: clamp(1.8rem, 4vw, 2.5rem);
         font-weight: 700;
         color: var(--primary-dark);
-        margin-bottom: 0.5rem;
-        line-height: 1;
     }
     
-    .stat-label {
+    .dashboard-subtitle {
         color: #6b7280;
-        font-size: clamp(0.8rem, 2vw, 0.9rem);
+        font-size: clamp(0.9rem, 2vw, 1.1rem);
+    }
+    
+    /* Button styles */
+    .btn-custom-primary {
+        background: linear-gradient(135deg, var(--primary-dark), var(--secondary-accent));
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 10px;
         font-weight: 600;
+        transition: all 0.3s ease;
     }
     
-    /* Main Content Grid - Improved Responsiveness */
-    .content-grid {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-        margin-bottom: 2rem;
+    .btn-custom-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(14, 129, 242, 0.4);
+        color: white;
     }
     
-    @media (min-width: 1024px) {
-        .content-grid {
-            grid-template-columns: 2fr 1fr;
-            gap: 2rem;
-        }
-    }
-    
-    /* Performance Section */
-    .performance-section {
+    .btn-custom-secondary {
         background: white;
-        padding: 1.25rem;
-        border-radius: 16px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        margin-bottom: 1.5rem;
-        overflow: hidden;
-    }
-    
-    @media (min-width: 768px) {
-        .performance-section {
-            padding: 1.5rem;
-        }
-    }
-    
-    .section-header {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-        margin-bottom: 1.5rem;
-    }
-    
-    @media (min-width: 640px) {
-        .section-header {
-            flex-direction: row;
-            align-items: center;
-            justify-content: space-between;
-        }
-    }
-    
-    .section-title {
-        font-size: clamp(1.2rem, 3vw, 1.5rem);
-        font-weight: 700;
-        color: var(--primary-dark);
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-    
-    /* Insights & Gamification - Improved Responsiveness */
-    .insights-section, .gamification-section {
-        background: white;
-        padding: 1.25rem;
-        border-radius: 16px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        margin-bottom: 1.5rem;
-    }
-    
-    @media (min-width: 768px) {
-        .insights-section, .gamification-section {
-            padding: 1.5rem;
-        }
-    }
-    
-    .insight-item, .gamification-item {
-        display: flex;
-        flex-direction: column;
-        gap: 0.25rem;
-        padding: 0.75rem 0;
-        border-bottom: 1px solid #f3f4f6;
-    }
-    
-    @media (min-width: 480px) {
-        .insight-item, .gamification-item {
-            flex-direction: row;
-            justify-content: space-between;
-            align-items: center;
-        }
-    }
-    
-    .insight-item:last-child, .gamification-item:last-child {
-        border-bottom: none;
-    }
-    
-    .insight-label, .gamification-label {
-        color: #6b7280;
+        color: var(--secondary-accent);
+        border: 2px solid var(--secondary-accent);
+        padding: 0.75rem 1.5rem;
+        border-radius: 10px;
         font-weight: 600;
-        font-size: clamp(0.9rem, 2vw, 1rem);
+        transition: all 0.3s ease;
     }
     
-    .insight-value, .gamification-value {
-        color: var(--primary-dark);
-        font-weight: 600;
-        font-size: clamp(0.9rem, 2vw, 1rem);
-        text-align: right;
+    .btn-custom-secondary:hover {
+        background: var(--secondary-accent);
+        color: white;
     }
     
-    .badge-container {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-        justify-content: flex-end;
-    }
-    
-    @media (max-width: 480px) {
-        .badge-container {
-            justify-content: flex-start;
-        }
-    }
-    
-    .badge {
+    /* Badge styles */
+    .badge-custom {
         background: linear-gradient(135deg, var(--primary-accent), #fbbf24);
         color: var(--text-dark);
         padding: 0.4rem 0.8rem;
         border-radius: 20px;
         font-size: 0.8rem;
         font-weight: 600;
-        white-space: nowrap;
     }
     
-    /* Community Features - Improved Responsiveness */
-    .community-section {
-        background: linear-gradient(135deg, rgba(9, 51, 102, 0.05), rgba(14, 129, 242, 0.05));
-        border: 1px solid rgba(14, 129, 242, 0.1);
-        padding: 1.25rem;
-        border-radius: 16px;
-        margin-bottom: 1.5rem;
-    }
-    
-    @media (min-width: 768px) {
-        .community-section {
-            padding: 1.5rem;
-        }
-    }
-    
-    .community-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        gap: 1rem;
-    }
-    
-    @media (max-width: 480px) {
-        .community-grid {
-            grid-template-columns: 1fr;
-        }
-    }
-    
-    .community-card {
-        background: white;
-        padding: 1.25rem;
-        border-radius: 12px;
-        text-align: center;
-        text-decoration: none;
-        color: var(--primary-dark);
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-        border: 1px solid #f3f4f6;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        min-height: 120px;
-    }
-    
-    .community-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-        color: var(--secondary-accent);
-    }
-    
-    .community-icon {
-        font-size: 1.75rem;
-        margin-bottom: 0.75rem;
-        color: var(--secondary-accent);
-    }
-    
-    .community-title {
-        font-weight: 700;
-        margin-bottom: 0.5rem;
-        font-size: clamp(0.9rem, 2vw, 1rem);
-    }
-    
-    .community-description {
-        color: #6b7280;
-        font-size: clamp(0.8rem, 2vw, 0.9rem);
-        line-height: 1.3;
-    }
-    
-    /* NFT Section */
-    .nft-section {
-        background: white;
-        padding: 1.25rem;
-        border-radius: 16px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        margin-bottom: 1.5rem;
-    }
-    
-    @media (min-width: 768px) {
-        .nft-section {
-            padding: 1.5rem;
-        }
-    }
-    
-    .nft-gallery {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        gap: 1rem;
-        margin-top: 1rem;
-    }
-    
-    @media (max-width: 480px) {
-        .nft-gallery {
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 0.75rem;
-        }
-    }
-    
-    .nft-card {
-        background: #f8fafc;
-        border-radius: 12px;
-        padding: 0.75rem;
-        text-align: center;
-        border: 1px solid #e5e7eb;
-    }
-    
-    .nft-image {
-        width: 100%;
-        border-radius: 8px;
-        margin-bottom: 0.5rem;
-    }
-    
-    .nft-name {
-        font-weight: 600;
-        color: var(--primary-dark);
-        margin-bottom: 0.25rem;
-        font-size: 0.8rem;
-    }
-    
-    .nft-description {
-        color: #6b7280;
-        font-size: 0.7rem;
-        margin-bottom: 0.5rem;
-    }
-    
-    .nft-id {
-        color: var(--secondary-accent);
-        font-size: 0.65rem;
-    }
-    
-    /* Trades Table - Major Responsiveness Improvements */
-    .trades-section {
-        background: white;
-        padding: 1.25rem;
-        border-radius: 16px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        margin-bottom: 1.5rem;
-        overflow: hidden;
-    }
-    
-    @media (min-width: 768px) {
-        .trades-section {
-            padding: 1.5rem;
-        }
-    }
-    
-    .filters-form {
-        display: flex;
-        flex-direction: column;
-        gap: 0.75rem;
-        margin-bottom: 1.5rem;
-        padding: 1rem;
-        background: #f8fafc;
-        border-radius: 10px;
-    }
-    
-    @media (min-width: 640px) {
-        .filters-form {
-            flex-direction: row;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-    }
-    
-    .filters-form label {
-        font-weight: 600;
-        color: var(--primary-dark);
-        font-size: clamp(0.9rem, 2vw, 1rem);
-        min-width: 80px;
-    }
-    
-    .filters-form select, .filters-form input {
-        padding: 0.5rem;
-        border: 1px solid #e5e7eb;
-        border-radius: 6px;
-        background: white;
-        font-size: clamp(0.9rem, 2vw, 1rem);
-        flex: 1;
-        min-width: 120px;
-    }
-    
-    .table-container {
-        overflow-x: auto;
+    /* Table styles */
+    .table-responsive {
         border-radius: 10px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        margin: 0 -0.5rem;
-        padding: 0 0.5rem;
     }
     
-    @media (min-width: 768px) {
-        .table-container {
-            margin: 0;
-            padding: 0;
-        }
-    }
-    
-    .trades-table {
-        width: 100%;
-        border-collapse: collapse;
-        background: white;
-        min-width: 800px;
-    }
-    
-    .trades-table th {
+    .table th {
         background: var(--primary-dark);
         color: white;
-        padding: 0.75rem 0.5rem;
-        text-align: left;
         font-weight: 600;
-        font-size: clamp(0.8rem, 2vw, 0.9rem);
-        white-space: nowrap;
+        border: none;
+        padding: 0.75rem;
     }
     
-    .trades-table td {
-        padding: 0.75rem 0.5rem;
-        border-bottom: 1px solid #f3f4f6;
-        font-size: clamp(0.8rem, 2vw, 0.9rem);
-    }
-    
-    .trades-table tr:hover {
-        background: #f8fafc;
+    .table td {
+        padding: 0.75rem;
+        vertical-align: middle;
     }
     
     .trade-win {
@@ -541,6 +132,14 @@
         background: #fef2f2 !important;
     }
     
+    .result-badge {
+        padding: 0.25rem 0.5rem;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 0.8rem;
+    }
+    
+    /* Screenshot thumbnail */
     .screenshot-thumb {
         width: 60px;
         height: 45px;
@@ -550,41 +149,18 @@
         transition: transform 0.3s ease;
     }
     
-    @media (min-width: 768px) {
-        .screenshot-thumb {
-            width: 80px;
-            height: 60px;
-        }
-    }
-    
     .screenshot-thumb:hover {
         transform: scale(1.05);
     }
     
-    .action-buttons-small {
-        display: flex;
-        flex-direction: column;
-        gap: 0.25rem;
-    }
-    
-    @media (min-width: 480px) {
-        .action-buttons-small {
-            flex-direction: row;
-            gap: 0.5rem;
-        }
-    }
-    
+    /* Small action buttons */
     .btn-small {
         padding: 0.3rem 0.6rem;
         border-radius: 6px;
-        font-size: clamp(0.7rem, 2vw, 0.8rem);
+        font-size: 0.8rem;
         font-weight: 600;
-        text-decoration: none;
         border: none;
-        cursor: pointer;
         transition: all 0.3s ease;
-        text-align: center;
-        white-space: nowrap;
     }
     
     .btn-mint {
@@ -602,195 +178,246 @@
         color: white;
     }
     
-    /* Minting Actions */
-    .minting-actions {
+    /* Community card hover effects */
+    .community-feature-card {
+        background: white;
+        border: 1px solid #f3f4f6;
+        border-radius: 12px;
+        padding: 1.25rem;
+        text-align: center;
+        text-decoration: none;
+        color: var(--primary-dark);
+        transition: all 0.3s ease;
+        height: 100%;
         display: flex;
         flex-direction: column;
-        gap: 0.75rem;
-        margin-bottom: 1.5rem;
-        width: 100%;
-    }
-    
-    @media (min-width: 480px) {
-        .minting-actions {
-            flex-direction: row;
-            justify-content: flex-end;
-            width: auto;
-        }
-    }
-    
-    /* Modal */
-    .modal {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.9);
-        z-index: 1000;
-        justify-content: center;
         align-items: center;
-        padding: 1rem;
+        justify-content: center;
     }
     
-    .modal-content {
-        max-width: 95%;
-        max-height: 95%;
+    .community-feature-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        color: var(--secondary-accent);
+        text-decoration: none;
+    }
+    
+    .community-icon {
+        font-size: 1.75rem;
+        margin-bottom: 0.75rem;
+        color: var(--secondary-accent);
+    }
+    
+    /* NFT card styles */
+    .nft-card {
+        background: #f8fafc;
         border-radius: 12px;
-        object-fit: contain;
+        padding: 0.75rem;
+        text-align: center;
+        border: 1px solid #e5e7eb;
     }
     
-    .modal-close {
-        position: absolute;
-        top: 1rem;
-        right: 1.5rem;
-        color: white;
-        font-size: 2rem;
-        cursor: pointer;
-        background: none;
-        border: none;
-        z-index: 1001;
+    .nft-image {
+        width: 100%;
+        border-radius: 8px;
+        margin-bottom: 0.5rem;
     }
     
-    /* Additional Mobile Optimizations */
-    @media (max-width: 480px) {
-        .dashboard-header {
-            margin-bottom: 1.5rem;
-        }
-        
-        .quick-actions {
-            padding: 1rem;
-        }
-        
-        .performance-section,
-        .trades-section,
-        .insights-section,
-        .gamification-section,
-        .nft-section,
-        .community-section {
-            padding: 1rem;
-            margin-bottom: 1rem;
-        }
-        
-        .section-header {
-            margin-bottom: 1rem;
-        }
-        
-        .filters-form {
-            padding: 0.75rem;
-        }
-        
-        .btn {
+    /* Modal styles */
+    .modal-full {
+        background: rgba(0, 0, 0, 0.9);
+    }
+    
+    /* Mobile optimizations */
+    @media (max-width: 768px) {
+        .btn-custom-primary,
+        .btn-custom-secondary {
             padding: 0.625rem 1.25rem;
+            font-size: 0.9rem;
+        }
+        
+        .table td, .table th {
+            padding: 0.5rem;
+            font-size: 0.8rem;
+        }
+        
+        .screenshot-thumb {
+            width: 50px;
+            height: 35px;
+        }
+        
+        .btn-small {
+            padding: 0.2rem 0.4rem;
+            font-size: 0.7rem;
+        }
+        
+        .stat-value {
+            font-size: 1.25rem;
         }
     }
     
-    /* High DPI Screen Support */
-    @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-        .stat-card,
-        .community-card,
-        .nft-card {
-            border-width: 0.5px;
+    @media (max-width: 576px) {
+        .dashboard-container {
+            padding: 0.5rem;
+        }
+        
+        .custom-card {
+            margin-bottom: 1rem;
+        }
+        
+        .btn-group-mobile {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .btn-group-mobile .btn {
+            width: 100%;
         }
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="dashboard-container">
+<div class="dashboard-container container-fluid py-3">
     <!-- Dashboard Header -->
-    <div class="dashboard-header">
-        <h1 class="dashboard-title">Trading Dashboard</h1>
-        <p class="dashboard-subtitle">Track your performance, analyze your trades, and optimize your strategy</p>
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <h1 class="dashboard-title">Trading Dashboard</h1>
+            <p class="dashboard-subtitle mx-auto" style="max-width: 600px;">
+                Track your performance, analyze your trades, and optimize your strategy
+            </p>
+        </div>
     </div>
 
     <!-- Quick Actions Section -->
-    <div class="quick-actions">
-        <div class="quick-actions-content">
-            <h3><i class="fas fa-play-circle"></i> Quick Actions</h3>
-            <p>Manage your trading activities and access key features</p>
-            <div class="action-buttons">
-                <a href="{{ url_for('log_trade') }}" class="btn btn-primary">
-                    <i class="fas fa-plus"></i> Log New Trade
-                </a>
-                <a href="{{ url_for('playbooks') }}" class="btn btn-secondary">
-                    <i class="fas fa-book"></i> My Playbooks
-                </a>
-                <a href="{{ url_for('import_trades') }}" class="btn btn-secondary">
-                    <i class="fas fa-file-import"></i> Import Trades
-                </a>
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="custom-card quick-actions-card p-4">
+                <div class="row align-items-center">
+                    <div class="col-md-8 mb-3 mb-md-0">
+                        <h3 class="h4 mb-2">
+                            <i class="fas fa-play-circle me-2"></i>Quick Actions
+                        </h3>
+                        <p class="text-muted mb-3 mb-md-0">
+                            Manage your trading activities and access key features
+                        </p>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="d-flex flex-column flex-md-row gap-2">
+                            <a href="{{ url_for('log_trade') }}" class="btn btn-custom-primary">
+                                <i class="fas fa-plus me-2"></i>Log New Trade
+                            </a>
+                            <a href="{{ url_for('playbooks') }}" class="btn btn-custom-secondary mt-2 mt-md-0">
+                                <i class="fas fa-book me-2"></i>My Playbooks
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Stats Overview -->
-    <div class="stats-grid">
-        <div class="stat-card">
-            <div class="stat-value">{{ trades|length }}</div>
-            <div class="stat-label">Total Trades</div>
+    <div class="row mb-4">
+        <div class="col-sm-6 col-lg-3 mb-3">
+            <div class="custom-card stat-card p-4 text-center">
+                <div class="stat-value h2 text-primary">{{ trades|length }}</div>
+                <div class="stat-label text-muted fw-semibold">Total Trades</div>
+            </div>
         </div>
-        <div class="stat-card">
-            <div class="stat-value">{{ (trades|selectattr('1', 'equalto', 'Win')|list|length) if trades else 0 }}</div>
-            <div class="stat-label">Winning Trades</div>
+        <div class="col-sm-6 col-lg-3 mb-3">
+            <div class="custom-card stat-card p-4 text-center">
+                <div class="stat-value h2 text-primary">{{ (trades|selectattr('1', 'equalto', 'Win')|list|length) if trades else 0 }}</div>
+                <div class="stat-label text-muted fw-semibold">Winning Trades</div>
+            </div>
         </div>
-        <div class="stat-card">
-            <div class="stat-value">{{ insights.most_traded_pair or 'N/A' }}</div>
-            <div class="stat-label">Most Traded Pair</div>
+        <div class="col-sm-6 col-lg-3 mb-3">
+            <div class="custom-card stat-card p-4 text-center">
+                <div class="stat-value h2 text-primary">{{ insights.most_traded_pair or 'N/A' }}</div>
+                <div class="stat-label text-muted fw-semibold">Most Traded Pair</div>
+            </div>
         </div>
-        <div class="stat-card">
-            <div class="stat-value">{{ gamification.win_streak }}</div>
-            <div class="stat-label">Current Win Streak</div>
+        <div class="col-sm-6 col-lg-3 mb-3">
+            <div class="custom-card stat-card p-4 text-center">
+                <div class="stat-value h2 text-primary">{{ gamification.win_streak }}</div>
+                <div class="stat-label text-muted fw-semibold">Current Win Streak</div>
+            </div>
         </div>
     </div>
 
-    <div class="content-grid">
-        <!-- Left Column -->
-        <div class="left-column">
+    <div class="row">
+        <!-- Left Column - Main Content -->
+        <div class="col-lg-8 mb-4">
             <!-- Performance Graph -->
-            <div class="performance-section">
-                <div class="section-header">
-                    <h2 class="section-title"><i class="fas fa-chart-line"></i> Trading Performance</h2>
+            <div class="custom-card p-4 mb-4">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3">
+                    <h2 class="h4 mb-2 mb-md-0">
+                        <i class="fas fa-chart-line me-2"></i>Trading Performance
+                    </h2>
                 </div>
-                <div>{{ graph|safe }}</div>
+                <div class="chart-container">
+                    {{ graph|safe }}
+                </div>
             </div>
 
             <!-- Trades Table -->
-            <div class="trades-section">
-                <div class="section-header">
-                    <h2 class="section-title"><i class="fas fa-table"></i> Your Trades</h2>
-                    <div class="minting-actions">
-                        <button onclick="mintAllTrades()" class="btn btn-primary">
-                            <i class="fas fa-coins"></i> Mint All Trades
+            <div class="custom-card p-4">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3">
+                    <h2 class="h4 mb-2 mb-md-0">
+                        <i class="fas fa-table me-2"></i>Your Trades
+                    </h2>
+                    <div class="btn-group-mobile d-flex flex-wrap gap-2">
+                        <button onclick="mintAllTrades()" class="btn btn-custom-primary btn-sm">
+                            <i class="fas fa-coins me-1"></i>Mint All
                         </button>
-                        <button onclick="mintBestTrades()" class="btn btn-secondary">
-                            <i class="fas fa-star"></i> Mint Best Trades
+                        <button onclick="mintBestTrades()" class="btn btn-custom-secondary btn-sm">
+                            <i class="fas fa-star me-1"></i>Mint Best
                         </button>
                     </div>
                 </div>
 
                 <!-- Filters -->
-                <form method="GET" action="{{ url_for('dashboard') }}" class="filters-form">
-                    <label for="sort_by">Sort by:</label>
-                    <select name="sort_by" id="sort_by">
-                        <option value="date">Date</option>
-                        <option value="pair">Pair</option>
-                        <option value="result">Result</option>
-                    </select>
-                    <label for="start_date">From:</label>
-                    <input type="date" name="start_date" id="start_date">
-                    <label for="end_date">To:</label>
-                    <input type="date" name="end_date" id="end_date">
-                    <button type="submit" class="btn btn-primary">Apply Filters</button>
-                </form>
+                <div class="card bg-light mb-3">
+                    <div class="card-body">
+                        <form method="GET" action="{{ url_for('dashboard') }}" class="row g-2 align-items-center">
+                            <div class="col-md-auto">
+                                <label for="sort_by" class="form-label mb-0 fw-semibold">Sort by:</label>
+                            </div>
+                            <div class="col-md">
+                                <select name="sort_by" id="sort_by" class="form-select form-select-sm">
+                                    <option value="date">Date</option>
+                                    <option value="pair">Pair</option>
+                                    <option value="result">Result</option>
+                                </select>
+                            </div>
+                            <div class="col-md-auto">
+                                <label for="start_date" class="form-label mb-0 fw-semibold">From:</label>
+                            </div>
+                            <div class="col-md">
+                                <input type="date" name="start_date" id="start_date" class="form-control form-control-sm">
+                            </div>
+                            <div class="col-md-auto">
+                                <label for="end_date" class="form-label mb-0 fw-semibold">To:</label>
+                            </div>
+                            <div class="col-md">
+                                <input type="date" name="end_date" id="end_date" class="form-control form-control-sm">
+                            </div>
+                            <div class="col-md-auto">
+                                <button type="submit" class="btn btn-custom-primary btn-sm w-100">Apply</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
 
                 <!-- Trades Table -->
                 <form id="mintSelectedForm">
-                    <div class="table-container">
-                        <table class="trades-table">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
                             <thead>
                                 <tr>
-                                    <th><input type="checkbox" id="selectAll" onclick="toggleSelectAll(this)"></th>
+                                    <th width="40">
+                                        <input type="checkbox" id="selectAll" onclick="toggleSelectAll(this)" class="form-check-input">
+                                    </th>
                                     <th>Pair</th>
                                     <th>Result</th>
                                     <th>Entry</th>
@@ -803,41 +430,46 @@
                             </thead>
                             <tbody>
                                 {% for trade in trades %}
-                                <tr class="trade-{{ trade[1].lower() }}">
-                                    <td><input type="checkbox" class="tradeCheckbox" value="{{ loop.index0 }}"></td>
+                                <tr class="{% if trade[1].lower() == 'win' %}trade-win{% else %}trade-loss{% endif %}">
+                                    <td>
+                                        <input type="checkbox" class="tradeCheckbox form-check-input" value="{{ loop.index0 }}">
+                                    </td>
                                     <td><strong>{{ trade[0] }}</strong></td>
                                     <td>
-                                        <span class="{% if trade[1].lower() == 'win' %}trade-win{% else %}trade-loss{% endif %}" 
-                                              style="padding: 0.25rem 0.5rem; border-radius: 12px; font-weight: 600;">
+                                        <span class="result-badge {% if trade[1].lower() == 'win' %}bg-success text-white{% else %}bg-danger text-white{% endif %}">
                                             {{ trade[1] }}
                                         </span>
                                     </td>
                                     <td>{{ trade[2] }}</td>
                                     <td>{{ trade[3] }}</td>
-                                    <td>{{ trade[4][:50] }}{% if trade[4]|length > 50 %}...{% endif %}</td>
+                                    <td>
+                                        <span data-bs-toggle="tooltip" title="{{ trade[4] }}">
+                                            {{ trade[4][:30] }}{% if trade[4]|length > 30 %}...{% endif %}
+                                        </span>
+                                    </td>
                                     <td>
                                         {% if trade[5] %}
                                         <img src="{{ url_for('uploaded_file', filename=trade[5]) }}" 
                                              class="screenshot-thumb"
                                              onclick="openModal('{{ url_for('uploaded_file', filename=trade[5]) }}')" />
                                         {% else %}
-                                        —
+                                        <span class="text-muted">—</span>
                                         {% endif %}
                                     </td>
                                     <td>{{ trade[6] }}</td>
                                     <td>
-                                        <div class="action-buttons-small">
+                                        <div class="d-flex flex-wrap gap-1">
                                             <button type="button" onclick="mintSingleTrade({{ loop.index0 }})" 
-                                                    class="btn-small btn-mint">
+                                                    class="btn btn-mint btn-small">
                                                 Mint
                                             </button>
                                             <a href="{{ url_for('edit_trade', trade_index=loop.index0) }}" 
-                                               class="btn-small btn-edit">
+                                               class="btn btn-edit btn-small">
                                                 Edit
                                             </a>
                                             <form method="POST" action="{{ url_for('delete_trade', trade_index=loop.index0) }}" 
-                                                  style="display:inline;">
-                                                <button type="submit" class="btn-small btn-delete">
+                                                  class="d-inline">
+                                                <button type="submit" class="btn btn-delete btn-small">
                                                     Delete
                                                 </button>
                                             </form>
@@ -848,180 +480,186 @@
                             </tbody>
                         </table>
                     </div>
-                    <div style="margin-top: 1rem; text-align: right;">
-                        <button type="button" onclick="mintSelectedTrades()" class="btn btn-primary">
-                            <i class="fas fa-coins"></i> Mint Selected Trades
+                    
+                    <div class="mt-3 text-end">
+                        <button type="button" onclick="mintSelectedTrades()" class="btn btn-custom-primary">
+                            <i class="fas fa-coins me-2"></i>Mint Selected Trades
                         </button>
                     </div>
                 </form>
             </div>
         </div>
 
-        <!-- Right Column -->
-        <div class="right-column">
+        <!-- Right Column - Sidebar -->
+        <div class="col-lg-4">
             <!-- AI Insights -->
-            <div class="insights-section">
-                <h2 class="section-title"><i class="fas fa-brain"></i> AI Insights</h2>
-                <div class="insight-item">
-                    <span class="insight-label">Common Emotion</span>
-                    <span class="insight-value">{{ insights.common_emotion or 'N/A' }}</span>
-                </div>
-                <div class="insight-item">
-                    <span class="insight-label">Rule Violation</span>
-                    <span class="insight-value">{{ insights.common_violation or 'N/A' }}</span>
-                </div>
-                <div class="insight-item">
-                    <span class="insight-label">Most Traded Pair</span>
-                    <span class="insight-value">{{ insights.most_traded_pair or 'N/A' }}</span>
-                </div>
-                <div class="insight-item">
-                    <span class="insight-label">Best Performing</span>
-                    <span class="insight-value">{{ insights.best_pair or 'N/A' }}</span>
-                </div>
-                <div class="insight-item">
-                    <span class="insight-label">Worst Performing</span>
-                    <span class="insight-value">{{ insights.worst_pair or 'N/A' }}</span>
-                </div>
-                <div class="insight-item">
-                    <span class="insight-label">Suggestion</span>
-                    <span class="insight-value">{{ insights.suggestion or 'No suggestions yet' }}</span>
+            <div class="custom-card p-4 mb-4">
+                <h2 class="h4 mb-3">
+                    <i class="fas fa-brain me-2"></i>AI Insights
+                </h2>
+                <div class="list-group list-group-flush">
+                    <div class="list-group-item d-flex justify-content-between align-items-center px-0">
+                        <span class="fw-semibold">Common Emotion</span>
+                        <span class="text-primary">{{ insights.common_emotion or 'N/A' }}</span>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-center px-0">
+                        <span class="fw-semibold">Rule Violation</span>
+                        <span class="text-primary">{{ insights.common_violation or 'N/A' }}</span>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-center px-0">
+                        <span class="fw-semibold">Most Traded Pair</span>
+                        <span class="text-primary">{{ insights.most_traded_pair or 'N/A' }}</span>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-center px-0">
+                        <span class="fw-semibold">Best Performing</span>
+                        <span class="text-primary">{{ insights.best_pair or 'N/A' }}</span>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-center px-0">
+                        <span class="fw-semibold">Worst Performing</span>
+                        <span class="text-primary">{{ insights.worst_pair or 'N/A' }}</span>
+                    </div>
+                    <div class="list-group-item px-0">
+                        <small class="fw-semibold d-block mb-1">Suggestion</small>
+                        <span class="text-primary">{{ insights.suggestion or 'No suggestions yet' }}</span>
+                    </div>
                 </div>
             </div>
 
             <!-- Gamification -->
-            <div class="gamification-section">
-                <h2 class="section-title"><i class="fas fa-trophy"></i> Achievements</h2>
-                <div class="gamification-item">
-                    <span class="gamification-label">Win Streak</span>
-                    <span class="gamification-value">{{ gamification.win_streak }}</span>
-                </div>
-                <div class="gamification-item">
-                    <span class="gamification-label">Badges</span>
-                    <div class="badge-container">
-                        {% for badge in gamification.badges %}
-                            <span class="badge">{{ badge }}</span>
-                        {% endfor %}
-                        {% if not gamification.badges %}
-                            <span style="color: #6b7280;">No badges yet</span>
-                        {% endif %}
+            <div class="custom-card p-4 mb-4">
+                <h2 class="h4 mb-3">
+                    <i class="fas fa-trophy me-2"></i>Achievements
+                </h2>
+                <div class="list-group list-group-flush">
+                    <div class="list-group-item d-flex justify-content-between align-items-center px-0">
+                        <span class="fw-semibold">Win Streak</span>
+                        <span class="text-primary">{{ gamification.win_streak }}</span>
+                    </div>
+                    <div class="list-group-item px-0">
+                        <span class="fw-semibold d-block mb-2">Badges</span>
+                        <div class="d-flex flex-wrap gap-1">
+                            {% for badge in gamification.badges %}
+                                <span class="badge-custom">{{ badge }}</span>
+                            {% endfor %}
+                            {% if not gamification.badges %}
+                                <span class="text-muted">No badges yet</span>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- NFT Section -->
-            <div class="nft-section">
-                <h2 class="section-title"><i class="fas fa-gem"></i> Your Trade NFTs</h2>
-                <button onclick="loadNFTGallery()" class="btn btn-primary">
-                    <i class="fas fa-eye"></i> Show My NFTs
+            <div class="custom-card p-4 mb-4">
+                <h2 class="h4 mb-3">
+                    <i class="fas fa-gem me-2"></i>Your Trade NFTs
+                </h2>
+                <button onclick="loadNFTGallery()" class="btn btn-custom-primary w-100 mb-3">
+                    <i class="fas fa-eye me-2"></i>Show My NFTs
                 </button>
-                <div id="nftGallery" class="nft-gallery"></div>
+                <div id="nftGallery" class="row g-2"></div>
             </div>
 
             <!-- Community Features -->
-            <div class="community-section">
-                <h2 class="section-title"><i class="fas fa-users"></i> Community</h2>
-                <div class="community-grid">
-                    <a href="{{ url_for('create_journal') }}" class="community-card">
-                        <div class="community-icon">📖</div>
-                        <div class="community-title">Share Trades</div>
-                        <div class="community-description">Create a trading journal</div>
-                    </a>
-                    <a href="{{ url_for('my_journals') }}" class="community-card">
-                        <div class="community-icon">📚</div>
-                        <div class="community-title">My Journals</div>
-                        <div class="community-description">View your journals</div>
-                    </a>
-                    <a href="{{ url_for('leaderboard') }}" class="community-card">
-                        <div class="community-icon">🏆</div>
-                        <div class="community-title">Leaderboard</div>
-                        <div class="community-description">See top traders</div>
-                    </a>
-                    <a href="{{ url_for('shared_journals') }}" class="community-card">
-                        <div class="community-icon">👥</div>
-                        <div class="community-title">Browse Journals</div>
-                        <div class="community-description">Give feedback</div>
-                    </a>
+            <div class="custom-card community-card-custom p-4">
+                <h2 class="h4 mb-3">
+                    <i class="fas fa-users me-2"></i>Community
+                </h2>
+                <div class="row g-3">
+                    <div class="col-sm-6 col-lg-12 col-xl-6">
+                        <a href="{{ url_for('create_journal') }}" class="community-feature-card">
+                            <div class="community-icon">📖</div>
+                            <div class="community-title fw-bold">Share Trades</div>
+                            <div class="community-description small text-muted">Create a trading journal</div>
+                        </a>
+                    </div>
+                    <div class="col-sm-6 col-lg-12 col-xl-6">
+                        <a href="{{ url_for('my_journals') }}" class="community-feature-card">
+                            <div class="community-icon">📚</div>
+                            <div class="community-title fw-bold">My Journals</div>
+                            <div class="community-description small text-muted">View your journals</div>
+                        </a>
+                    </div>
+                    <div class="col-sm-6 col-lg-12 col-xl-6">
+                        <a href="{{ url_for('leaderboard') }}" class="community-feature-card">
+                            <div class="community-icon">🏆</div>
+                            <div class="community-title fw-bold">Leaderboard</div>
+                            <div class="community-description small text-muted">See top traders</div>
+                        </a>
+                    </div>
+                    <div class="col-sm-6 col-lg-12 col-xl-6">
+                        <a href="{{ url_for('shared_journals') }}" class="community-feature-card">
+                            <div class="community-icon">👥</div>
+                            <div class="community-title fw-bold">Browse Journals</div>
+                            <div class="community-description small text-muted">Give feedback</div>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Modal for preview -->
-<div id="imageModal" class="modal">
-    <button class="modal-close" onclick="closeModal()">&times;</button>
-    <img id="modalImage" class="modal-content" src="" alt="Preview" />
+<!-- Modal for image preview -->
+<div class="modal fade" id="imageModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content bg-transparent border-0">
+            <div class="modal-header border-0">
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center">
+                <img id="modalImage" class="img-fluid rounded" src="" alt="Preview">
+            </div>
+        </div>
+    </div>
 </div>
 
-<!-- Include the same JavaScript from your original dashboard -->
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+
 <script>
-    // Your existing JavaScript code for NFT functionality goes here
+    // Initialize Bootstrap tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+
+    function toggleSelectAll(source) {
+        const checkboxes = document.querySelectorAll('.tradeCheckbox');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = source.checked;
+        });
+    }
+    
+    function openModal(imageSrc) {
+        document.getElementById("modalImage").src = imageSrc;
+        var modal = new bootstrap.Modal(document.getElementById('imageModal'));
+        modal.show();
+    }
+
+    // Your existing NFT JavaScript functions remain the same...
     // (connectWallet, uploadToIPFS, mintSingleTrade, mintSelectedTrades, mintAllTrades, mintBestTrades, loadNFTGallery)
-    
-    function toggleSelectAll(source) {
-        const checkboxes = document.querySelectorAll('.tradeCheckbox');
-        checkboxes.forEach(checkbox => {
-            checkbox.checked = source.checked;
-        });
-    }
-    
-    function openModal(imageSrc) {
-        document.getElementById("modalImage").src = imageSrc;
-        document.getElementById("imageModal").style.display = "flex";
-    }
-    
-    function closeModal() {
-        document.getElementById("imageModal").style.display = "none";
-    }
-    
-    document.getElementById("imageModal").addEventListener("click", function (e) {
-        if (e.target === this) closeModal();
-    });
-</script>
-<script>
-    function openModal(imageSrc) {
-        document.getElementById("modalImage").src = imageSrc;
-        document.getElementById("imageModal").style.display = "flex";
-    }
-
-    function closeModal() {
-        document.getElementById("imageModal").style.display = "none";
-    }
-
-    document.getElementById("imageModal").addEventListener("click", function (e) {
-        if (e.target === this) closeModal();
-    });
-
-    function toggleSelectAll(source) {
-        const checkboxes = document.querySelectorAll('.tradeCheckbox');
-        checkboxes.forEach(checkbox => {
-            checkbox.checked = source.checked;
-        });
-    }
 </script>
 
-<script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
 <script>
-    // Contract setup
-    const contractAddress = "0x40D7562485D8FA64A1D4755DcBbA305D56EA031f"; // Replace with your contract address
+    // Contract setup and NFT functions (same as before)
+    const contractAddress = "0x40D7562485D8FA64A1D4755DcBbA305D56EA031f";
     const contractABI = [
-      {
-        "inputs": [
-          { "internalType": "address", "name": "recipient", "type": "address" },
-          { "internalType": "string", "name": "tokenURI", "type": "string" }
-        ],
-        "name": "mintNFT",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-      }
+        {
+            "inputs": [
+                { "internalType": "address", "name": "recipient", "type": "address" },
+                { "internalType": "string", "name": "tokenURI", "type": "string" }
+            ],
+            "name": "mintNFT",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        }
     ];
 
-    // Trades variable from backend
     var trades = {{ trades|tojson|safe }};
 
-    // Connect wallet function
     async function connectWallet() {
         if (!window.ethereum) {
             alert("Please install MetaMask first.");
@@ -1033,7 +671,6 @@
         return new ethers.Contract(contractAddress, contractABI, signer);
     }
 
-    // Upload trade metadata to IPFS
     async function uploadToIPFS(trade) {
         const metadata = {
             name: `Trade - ${trade[0]}`,
@@ -1047,7 +684,6 @@
                 { trait_type: "Date", value: trade[6] }
             ]
         };
-        // Convert metadata to Blob and send as file
         const blob = new Blob([JSON.stringify(metadata)], { type: "application/json" });
         const formData = new FormData();
         formData.append("file", blob, "metadata.json");
@@ -1066,7 +702,6 @@
         return `https://ipfs.io/ipfs/${result.value.cid}`;
     }
 
-    // Mint a single trade as NFT
     async function mintSingleTrade(index) {
         try {
             const trade = trades[index];
@@ -1083,7 +718,6 @@
         }
     }
 
-    // Mint selected trades as NFTs
     async function mintSelectedTrades() {
         const selected = Array.from(document.querySelectorAll('.tradeCheckbox:checked')).map(cb => parseInt(cb.value));
         if (selected.length === 0) {
@@ -1109,7 +743,6 @@
         }
     }
 
-    // Mint all trades as NFTs
     async function mintAllTrades() {
         if (trades.length === 0) {
             alert("No trades to mint.");
@@ -1133,7 +766,6 @@
         }
     }
 
-    // Mint best trades only
     async function mintBestTrades() {
         const bestTrades = trades.filter(trade => 
             trade[0] === '{{ insights.best_pair }}' && trade[1].toLowerCase() === 'win'
@@ -1161,7 +793,6 @@
         }
     }
 
-    // NFT gallery loader
     async function loadNFTGallery() {
         try {
             const contract = await connectWallet();
@@ -1170,43 +801,42 @@
             let nfts = [];
             
             try {
-                // Get number of NFTs owned
                 const balance = await contract.balanceOf(address);
                 for (let i = 0; i < balance; i++) {
                     const tokenId = await contract.tokenOfOwnerByIndex(address, i);
                     const tokenURI = await contract.tokenURI(tokenId);
-                    // Fetch metadata from IPFS
                     const response = await fetch(tokenURI);
                     const meta = await response.json();
                     nfts.push({ tokenId, ...meta });
                 }
             } catch (e) {
-                document.getElementById("nftGallery").innerHTML = `<div style='color:red;'>Error loading NFTs: ${e}</div>`;
+                document.getElementById("nftGallery").innerHTML = `<div class="col-12"><div class="alert alert-danger">Error loading NFTs: ${e}</div></div>`;
                 return;
             }
             
             if (nfts.length === 0) {
-                document.getElementById("nftGallery").innerHTML = "<div>No NFTs minted yet.</div>";
+                document.getElementById("nftGallery").innerHTML = '<div class="col-12 text-center text-muted">No NFTs minted yet.</div>';
                 return;
             }
             
             let html = "";
             for (const nft of nfts) {
                 html += `
-                    <div style='background:#fff; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.05); padding:1rem; width:220px;'>
-                        <img src='${nft.image}' alt='NFT' style='width:100%; border-radius:8px; margin-bottom:0.5rem;'>
-                        <div style='font-weight:600; color:#0ea5e9;'>${nft.name}</div>
-                        <div style='font-size:0.9rem; color:#374151;'>${nft.description}</div>
-                        <div style='font-size:0.8rem; color:#6366f1;'>Token ID: ${nft.tokenId}</div>
+                    <div class="col-sm-6">
+                        <div class="nft-card">
+                            <img src="${nft.image}" alt="NFT" class="nft-image">
+                            <div class="fw-bold text-primary">${nft.name}</div>
+                            <div class="small text-muted">${nft.description.substring(0, 30)}${nft.description.length > 30 ? '...' : ''}</div>
+                            <div class="small text-info">Token ID: ${nft.tokenId}</div>
+                        </div>
                     </div>
                 `;
             }
             document.getElementById("nftGallery").innerHTML = html;
         } catch (error) {
             console.error("Gallery error:", error);
-            document.getElementById("nftGallery").innerHTML = `<div style='color:red;'>Error: ${error.message}</div>`;
+            document.getElementById("nftGallery").innerHTML = `<div class="col-12"><div class="alert alert-danger">Error: ${error.message}</div></div>`;
         }
     }
 </script>
-<!-- Include your existing NFT JavaScript functionality here -->
 {% endblock %}

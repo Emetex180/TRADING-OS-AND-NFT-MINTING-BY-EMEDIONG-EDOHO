@@ -36,7 +36,7 @@
             color: white;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             position: relative;
-            z-index: 100;
+            z-index: 1000;
         }
 
         .nav-brand {
@@ -44,6 +44,7 @@
             font-weight: bold;
             display: flex;
             align-items: center;
+            z-index: 1001;
         }
 
         .nav-brand i {
@@ -81,14 +82,19 @@
             display: inline;
         }
 
-        /* Hamburger icon */
+        /* Hamburger icon - FIXED */
         .hamburger {
             display: none;
             cursor: pointer;
             flex-direction: column;
             justify-content: space-between;
             width: 30px;
-            height: 20px;
+            height: 21px;
+            background: none;
+            border: none;
+            padding: 0;
+            z-index: 1001;
+            position: relative;
         }
 
         .hamburger div {
@@ -97,6 +103,7 @@
             background: white;
             border-radius: 2px;
             transition: all 0.3s ease;
+            transform-origin: center;
         }
 
         .hamburger.active div:nth-child(1) {
@@ -105,6 +112,7 @@
 
         .hamburger.active div:nth-child(2) {
             opacity: 0;
+            transform: scale(0);
         }
 
         .hamburger.active div:nth-child(3) {
@@ -120,20 +128,23 @@
         @media (max-width: 768px) {
             nav {
                 padding: 1rem;
-                flex-wrap: wrap;
+                position: relative;
+                min-height: 60px;
             }
             
             .nav-links {
                 display: none;
                 width: 100%;
                 flex-direction: column;
-                align-items: flex-start;
+                align-items: stretch;
                 background: linear-gradient(to bottom, var(--primary-dark), var(--secondary-accent));
                 position: absolute;
                 top: 100%;
                 left: 0;
                 padding: 1rem;
                 box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+                z-index: 999;
+                margin: 0;
             }
 
             nav a, nav form button {
@@ -142,14 +153,26 @@
                 padding: 0.75rem 1rem;
                 margin: 0.25rem 0;
                 justify-content: flex-start;
+                box-sizing: border-box;
             }
 
             .hamburger { 
                 display: flex; 
+                order: 2;
+                margin-left: auto;
+            }
+
+            .nav-brand {
+                order: 1;
             }
 
             .nav-links.active { 
                 display: flex; 
+            }
+
+            /* Prevent body scroll when menu is open */
+            body.menu-open {
+                overflow: hidden;
             }
         }
 
@@ -280,43 +303,66 @@
         {% block content %}{% endblock %}
     </div>
 
-    <script>
-        function toggleMenu() {
-            const menu = document.querySelector('.nav-links');
-            const hamburger = document.querySelector('.hamburger');
-            menu.classList.toggle('active');
-            hamburger.classList.toggle('active');
+<script>
+    function toggleMenu() {
+        const menu = document.querySelector('.nav-links');
+        const hamburger = document.querySelector('.hamburger');
+        const body = document.body;
+        
+        menu.classList.toggle('active');
+        hamburger.classList.toggle('active');
+        body.classList.toggle('menu-open');
+    }
+
+    // Close mobile menu when clicking outside or on links
+    document.addEventListener('click', function(event) {
+        const nav = document.querySelector('nav');
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
+        const isClickInsideNav = nav.contains(event.target);
+        
+        if (!isClickInsideNav && navLinks.classList.contains('active')) {
+            closeMenu();
         }
+        
+        // Close menu when clicking on nav links (for smooth UX)
+        if (event.target.closest('nav a') || event.target.closest('nav button')) {
+            setTimeout(closeMenu, 300);
+        }
+    });
 
-        // Close mobile menu when clicking outside
-        document.addEventListener('click', function(event) {
-            const nav = document.querySelector('nav');
-            const hamburger = document.querySelector('.hamburger');
-            const navLinks = document.querySelector('.nav-links');
+    function closeMenu() {
+        const menu = document.querySelector('.nav-links');
+        const hamburger = document.querySelector('.hamburger');
+        const body = document.body;
+        
+        menu.classList.remove('active');
+        hamburger.classList.remove('active');
+        body.classList.remove('menu-open');
+    }
+
+    // Close menu on escape key
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeMenu();
+        }
+    });
+
+    // AUTO-HIDE FLASH MESSAGES AFTER 5 SECONDS
+    window.addEventListener('DOMContentLoaded', () => {
+        const flashes = document.querySelectorAll('.flash-message');
+        flashes.forEach((flash, index) => {
+            setTimeout(() => {
+                flash.style.opacity = '1';
+                flash.style.transform = 'translateX(0)';
+            }, 100 * index);
             
-            if (!nav.contains(event.target) && navLinks.classList.contains('active')) {
-                navLinks.classList.remove('active');
-                hamburger.classList.remove('active');
-            }
+            setTimeout(() => {
+                flash.classList.add('flash-hide');
+                setTimeout(() => flash.remove(), 500);
+            }, 5000 + (100 * index));
         });
-
-        // AUTO-HIDE FLASH MESSAGES AFTER 5 SECONDS
-        window.addEventListener('DOMContentLoaded', () => {
-            const flashes = document.querySelectorAll('.flash-message');
-            flashes.forEach((flash, index) => {
-                // Stagger the appearance of multiple messages
-                setTimeout(() => {
-                    flash.style.opacity = '1';
-                    flash.style.transform = 'translateX(0)';
-                }, 100 * index);
-                
-                // Auto-hide after 5 seconds
-                setTimeout(() => {
-                    flash.classList.add('flash-hide');
-                    setTimeout(() => flash.remove(), 500); // remove from DOM after fade
-                }, 5000 + (100 * index));
-            });
-        });
-    </script>
+    });
+</script>
 </body>
 </html>
